@@ -1,0 +1,16 @@
+Package: adv.tzh
+Type: Package
+Title: Advanced Manipulation of R Packages
+Version: 0.1.0
+Date: 2024-01-15
+Description: To perform advanced manipulation of R packages.
+License: GPL-2
+Encoding: UTF-8
+Imports: devtools, pkgload, tools, utils
+Authors@R: c(person(given = "Tingting", family = "Zhan", role =
+       c("aut", "cre", "cph"), email =
+       c("tingtingzhan@gmail.com")))
+Language: en-US
+Roxygen: list(markdown = TRUE)
+Depends: R (>= 4.4.0)
+RoxygenNote: 7.3.1
