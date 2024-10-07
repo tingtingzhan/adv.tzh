@@ -25,7 +25,7 @@ working packages (i.e., directories on hard drive to be loaded by \link[pkgload]
 }
 \examples{
 if (FALSE) {
-pkg = c('.', '../ThomasJeffersonUniv', '../DanielBiostatistics10th', '../readData',
+pkg = c('.', '../DanielBiostatistics10th',
   '../TukeyGH77')
 working_package_dependencies(pkg, recursive = FALSE)
 working_package_dependencies(pkg, recursive = TRUE)

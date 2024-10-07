@@ -1,10 +1,8 @@
 
 
-#' @title packageAdvanced
+#' @title adv.tzh
 #'
-#' @description
-#'
-#' packageAdvanced
+#' @description ..
 #'
 #' @keywords internal
 '_PACKAGE'
