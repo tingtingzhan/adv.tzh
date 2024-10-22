@@ -12,20 +12,41 @@ dataFromPackage(pkg = "datasets", what)
 \item{what}{\link[base]{character} scalar or \link[base]{vector}, class(es), see \link[base]{inherits}}
 }
 \value{
-Function \link{dataFromPackage} returns a \link[base]{list} of R objects
+Function \link{dataFromPackage} returns a \link[base]{list} of R objects.
 }
 \description{
 Obtain all objects available via \link[utils]{data} from a package
 }
+\details{
+For data name without parentheses, e.g. \code{CO2},
+\itemize{
+\item {works: \code{data(list = 'CO2', package = 'datasets')}}
+\item {works: \code{mget('CO2', envir = as.environment('package:datasets'))}}
+}
+
+Data names with parentheses, e.g. \code{beaver1 (beavers)},
+are objects saved to \code{beavers.rda} file in the source.
+\itemize{
+\item {works: \code{data(list = 'beavers', package = 'datasets')}}
+\item {no! \code{data(list = 'beaver1', package = 'datasets')}}
+\item {no! \code{mget(x = 'beavers', envir = as.environment('package:datasets'))}}
+\item {works: \code{mget(x = 'beaver1', envir = as.environment('package:datasets'))}}
+}
+
+\link[base]{mget} is ~200 times faster than \link[utils]{data},
+
+Sometimes \link[base]{mget} fails and I do not know why.
+
+\link[utils]{data} looks for 'data' in \emph{many} places.
+}
 \examples{
 lapply(dataFromPackage('datasets', what = 'data.frame'), head)
 lapply(dataFromPackage('datasets', what = 'numeric'), head)
-# lapply(dataFromPackage(c('MASS', 'survival')), head)
 
-# for developers
-data(); ls()
-tryCatch(data(beaver1, package = 'datasets'), warning = identity); ls()
-data(beavers, package = 'datasets'); ls()
+\dontrun{
+pkg = setdiff(rownames(installed.packages()), c('rjags', 'VennDiagram'))
+noout = lapply(pkg, FUN = dataFromPackage)
+}
 }
 \references{
 \url{https://stackoverflow.com/questions/27709936/get-a-list-of-the-data-sets-in-a-particular-package}
