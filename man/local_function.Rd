@@ -21,10 +21,10 @@ Functions in a Package, defined inside \link[base]{local}
 Need to \strong{Suggests} for examples to run.
 }
 \examples{
-local_function('base') # wow
-local_function('stats') # wow
-local_function('utils') # wow
-local_function('tools') # wow
+local_function('base')
+local_function('stats')
+local_function('utils')
+local_function('tools')
 local_function('MASS')
 local_function('nlme')
 local_function('survival')
