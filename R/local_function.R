@@ -19,6 +19,7 @@
 #' local_function('MASS')
 #' local_function('nlme')
 #' local_function('survival')
+#' @importFrom cli style_bold col_green col_yellow col_blue col_magenta col_cyan
 #' @export
 local_function <- function(pkg, ...) {
   
@@ -47,7 +48,7 @@ local_function <- function(pkg, ...) {
   # isNamespace(environment(spatstat.explore::Emark)) # FALSE
   id <- !vapply(ev, FUN = isNamespace, FUN.VALUE = NA) & !vapply(ev, FUN = identical, y = ns, FUN.VALUE = NA)
   if (!any(id)) {
-    message(sprintf(fmt = 'None of %d functions in package \033[1;35m%s\033[0m are defined via ?base::local, etc.', length(id), pkg))
+    message(sprintf(fmt = 'None of %d functions in package %s are defined via ?base::local, etc.', length(id), style_bold(col_magenta(pkg))))
     return(invisible())
   } 
   
@@ -55,14 +56,18 @@ local_function <- function(pkg, ...) {
     env <- environment(fun = get(f, envir = ns))
     x <- setdiff(ls(envir = env, all.names = TRUE), y = f)
     message(sprintf(
-      fmt = 'Local envir of \033[1;34m%s\033[0m contains %s', f,
+      fmt = 'Local envir of %s contains %s', 
+      style_bold(col_blue(f)),
       if (length(x)) {
-        paste0('\033[1;33m', x, '\033[0m', collapse = ', ')
-      } else '\033[1;32mnothing else\033[0m'
+        paste0(style_bold(col_yellow(x)), collapse = ', ')
+      } else style_bold(col_green('nothing else'))
     ))
   })
   message()
-  message(sprintf(fmt = '\033[1;32m%d/%d; %.1f%%\033[0m functions in package \033[1;36m%s\033[0m are defined via ?base::local, etc.', sum(id), length(id), 1e2*mean(id), pkg))
+  message(sprintf(
+    fmt = '%s functions in package %s are defined via ?base::local, etc.', 
+    style_bold(col_green(sprintf(fmt = '%d/%d; %.1f%%', sum(id), length(id), 1e2*mean(id)))), 
+    style_bold(col_cyan(pkg))))
 
   return(invisible())
   

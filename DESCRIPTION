@@ -6,7 +6,7 @@ Date: 2024-01-15
 Description: To perform advanced manipulation of R packages.
 License: GPL-2
 Encoding: UTF-8
-Imports: devtools, pkgload, tools, utils
+Imports: cli, devtools, pkgload, tools, utils
 Suggests: stats, MASS, nlme, survival
 Authors@R: c(person(given = "Tingting", family = "Zhan", role =
        c("aut", "cre", "cph"), email =
