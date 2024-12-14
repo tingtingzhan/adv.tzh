@@ -47,7 +47,7 @@ checkDocument <- function(pkg) {
       if (sum(idx) > 1L) stop(sQuote(inm), ' has more than one @return')
       if (!any(idx)) stop(sQuote(inm), ' does not have @return') # masked temporarily..
       # no need; also do not want to import my [.cyan], etc.
-      # cat(.cyan(c(sQuote(inm), 'has')), .bold(.red('@return')), .violet(sQuote(itxt[which(idx) + 1L])), '\n\n')
+      # cat(c(sQuote(inm), 'has'), '@return', sQuote(itxt[which(idx) + 1L]), '\n\n')
       
     }
     
