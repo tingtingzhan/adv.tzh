@@ -1,5 +1,4 @@
 
-# old name [checkDocument]
 
 #' @title Auxiliary Tasks of \link[devtools]{document}
 #' 

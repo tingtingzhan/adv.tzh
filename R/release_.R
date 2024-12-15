@@ -1,6 +1,4 @@
 
-# old name [checkRelease]
-
 #' @title Auxiliary Tasks before \link[devtools]{release}
 #' 
 #' @description 
