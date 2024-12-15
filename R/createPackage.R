@@ -10,7 +10,7 @@
 #' @param path \link[base]{character} scalar, parent directory of the package,
 #' default is the return of \link[base]{tempdir}
 #' 
-#' @param to_release \link[base]{logical} scalar
+# @param to_release \link[base]{logical} scalar
 #' 
 #' @param ... additional parameters of [package_skeleton_ext]
 #' 
@@ -35,13 +35,13 @@
 #' \url{https://cran.r-project.org/package=ThomasJeffersonUniv}
 #' 
 #' @export
-createPackage <- function(name, path = tempdir(), to_release = TRUE, ...) {
+createPackage <- function(name, path = tempdir(), ...) { # , to_release = TRUE
   pkg <- file.path(path, name)
   package_skeleton_ext(name = name, path = path, ...)
   removeLocalPackage(name = name)
   updateDESCRIPTION(pkg = pkg)
-  checkDocument(pkg = pkg)
-  checkRelease(pkg = pkg, to_release = to_release)
+  document_(pkg = pkg)
+  release_(pkg = pkg) # , to_release = to_release
   removeLocalPackage(name = name)
 }
 

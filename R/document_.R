@@ -1,14 +1,23 @@
 
-#' @title Check Document
+# old name [checkDocument]
+
+#' @title Auxiliary Tasks of \link[devtools]{document}
 #' 
-#' @description ..
+#' @description
+#' Auxiliary tasks of \link[devtools]{document}, including
+#' \itemize{
+#' \item {checking compliance to some conventions of CRAN}
+#' \item {\link[devtools]{spell_check}}
+#' \item {\link[devtools]{build_manual}}
+#' }
+#' 
 #' 
 #' @param pkg \link[base]{character} scalar, directory of the package
 #' 
 #' @importFrom devtools build_manual document spell_check
 #' @importFrom utils capture.output
 #' @export
-checkDocument <- function(pkg) {
+document_ <- function(pkg) {
   pkg <- normalizePath(pkg)
   name <- basename(pkg)
   path <- dirname(pkg)
@@ -29,7 +38,7 @@ checkDocument <- function(pkg) {
       i_docType <- gsub(pattern = '^\\\\docType\\{|\\}$', replacement = '', x = itxt[idx])
       switch(i_docType, data = {
         # do something
-      }, package = { # '\\docType{package}' still created by \pkg{roxygen2}
+      }, package = { # '\\docType{package}' still created by \CRANpkg{roxygen2}
         # do something
       }, class = { # S4 class
         # do something

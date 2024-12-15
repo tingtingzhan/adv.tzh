@@ -42,7 +42,9 @@ ns_name <- function(x) {
 #' @param pkg \link[base]{character} scalar
 #' 
 #' @examples
-#' ns_fun_fromImports(fun = c('col_green', 'check_rhub'), pkg = 'adv.tzh')
+#' # ns_fun_fromImports(fun = c('col_green', 'build_manual'), pkg = 'adv.tzh')
+#' # fine with devtools::check() on \pkg{adv.tzh}
+#' # but not okay if copied into other packages :)
 #' @keywords internal
 #' @export
 ns_fun_fromImports <- function(fun, pkg) {

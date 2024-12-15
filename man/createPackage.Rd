@@ -4,15 +4,13 @@
 \alias{createPackage}
 \title{Create Sub-Package}
 \usage{
-createPackage(name, path = tempdir(), to_release = TRUE, ...)
+createPackage(name, path = tempdir(), ...)
 }
 \arguments{
 \item{name}{\link[base]{character} scalar, name of the package}
 
 \item{path}{\link[base]{character} scalar, parent directory of the package,
 default is the return of \link[base]{tempdir}}
-
-\item{to_release}{\link[base]{logical} scalar}
 
 \item{...}{additional parameters of \link{package_skeleton_ext}}
 }
