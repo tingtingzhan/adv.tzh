@@ -7,7 +7,68 @@
 #' 
 #' @param what \link[base]{character} scalar or \link[base]{vector}, class(es), see \link[base]{inherits}
 #' 
+
+#' @returns 
+#' Function [dataFromPackage] returns a \link[base]{list} of R objects.
+#' 
+#' @references 
+#' \url{https://stackoverflow.com/questions/27709936/get-a-list-of-the-data-sets-in-a-particular-package}
+#' 
+#' @examples
+#' # dataFromPackage(c('datasets', 'MASS'), what = 'data.frame') # next step
+#' 
+#' lapply(dataFromPackage('datasets', what = 'data.frame'), head)
+#' lapply(dataFromPackage('datasets', what = 'numeric'), head)
+#' 
+#' @importFrom utils data
+#' @export
+dataFromPackage <- function(pkg = 'datasets', what) {
+  
+  #message('\rGetting data from package ', pkg, '                       ', appendLF = FALSE)
+  
+  #env <- as.environment(paste0('package:', pkg)) # only allow len-1 `pkg`
+  
+  ev <- data(package = pkg) |> # allow vector `pkg`
+    as.environment.packageIQR()
+  
+  ret <- if (is.list(ev)) {
+    tmp <- lapply(ev, FUN = as.list.environment, sorted = TRUE)
+    nms <- lapply(tmp, FUN = names)
+    stop('have not figured out how to deal with duplicated names yet')
+  } else as.list.environment(ev, sorted = TRUE)
+  
+  if (missing(what)) return(ret)
+  
+  id <- vapply(ret, FUN = inherits, what = what, FUN.VALUE = NA)
+  return(ret[id])
+}
+
+
+
+
+
+
+
+
+
+
+
+
+#' @title S3 Method Dispatches for `'packageIQR'` Object
+#' 
+#' @param x `'packageIQR'` object, returned value of function \link[utils]{data},
+#' all available data sets in one or more packages
+#' 
+#' @param ... addtional parameters, currently not in use
+#' 
 #' @details
+#' Function [as.environment.packageIQR] re-runs function \link[utils]{data} 
+#' in a \link[base]{new.env}.
+#' 
+#' @returns
+#' Function [as.environment.packageIQR] returns an \link[base]{environment}.
+#' 
+#' @note
 #' For data name without parentheses, e.g. `CO2`, 
 #' \itemize{
 #' \item {works: `data(list = 'CO2', package = 'datasets')`}
@@ -23,63 +84,95 @@
 #' \item {works: `mget(x = 'beaver1', envir = as.environment('package:datasets'))`}
 #' }
 #' 
-#' \link[base]{mget} is ~200 times faster than \link[utils]{data}, 
+#' \link[base]{mget} is ~200 times faster than \link[utils]{data}.
 #' 
-#' Sometimes \link[base]{mget} fails and I do not know why.
+#' Sometimes function \link[base]{mget} fails and I do not know why.
 #' 
-#' \link[utils]{data} looks for 'data' in *many* places.
-#' 
-#' @returns 
-#' Function [dataFromPackage] returns a \link[base]{list} of R objects.
-#' 
-#' @references 
-#' \url{https://stackoverflow.com/questions/27709936/get-a-list-of-the-data-sets-in-a-particular-package}
+#' Function \link[utils]{data} looks for 'data' in *many* places.
 #' 
 #' @examples
-#' lapply(dataFromPackage('datasets', what = 'data.frame'), head)
-#' lapply(dataFromPackage('datasets', what = 'numeric'), head)
+#' ls1 = data(package = 'datasets') |> as.environment() |> as.list(sort = TRUE)
+#' ls2 = as.environment('package:datasets') |> as.list(sort = TRUE)
+#' stopifnot(identical(ls1, ls2))
+#' 
+#' if (FALSE) {
+#' ls1 = data(package = 'spatstat.data') |> as.environment() |> as.list(sort = TRUE)
+#' library(spatstat.data); ls2 = as.environment('package:spatstat.data') |> as.list(sort = TRUE)
+#' length(ls1)
+#' length(ls2)
+#' setdiff(names(ls2), names(ls1))
+#' class(ls2$copyExampleFiles) # function
+#' }
 #' 
 #' \dontrun{
 #' pkg = setdiff(rownames(installed.packages()), c('rjags', 'VennDiagram'))
-#' noout = lapply(pkg, FUN = dataFromPackage)
+#' ev = data(package = pkg) |> as.environment() # not that slow
+#' length(ev)
 #' }
+#' @name packageIQR_S3
 #' @importFrom utils data
+#' @export as.environment.packageIQR
 #' @export
-dataFromPackage <- function(pkg = 'datasets', what) {
+as.environment.packageIQR <- function(x) {
   
-  # message('\r', pkg, '                       ', appendLF = FALSE)
-  
-  env <- packageIQR2env(data(package = pkg))
-  
-  ret <- as.list.environment(env, sorted = TRUE)
-  if (missing(what)) return(ret)
-  
-  id <- vapply(ret, FUN = inherits, what = what, FUN.VALUE = NA)
-  return(ret[id])
-}
+  xs <- split.packageIQR(x)
 
-
-packageIQR2env <- function(object) {
+  # same data name could appear in more than one package(s)
+  ev_ <- mapply(FUN = function(x, package) {
+    ev <- new.env()
+    nm <- sort.default(unique.default(gsub(pattern = '^.* \\(|\\)$', replacement = '', x = x$results[,'Item'])))
+    data(list = nm, package = package, envir = ev) # must have `list` to assign object(s) to `envir`
+    if (length(ls(envir = ev)) != dim(x$results)[1L]) stop('do not allow')
+    return(ev)
+  }, x = xs, package = names(xs), SIMPLIFY = FALSE)
   
-  # `object` is a 'packageIQR' object, returned from ?utils::data 
+  if (length(xs) == 1L) return(ev_[[1L]])
   
-  res <- object[['results']]
-  
-  nm <- sort.default(unique.default(gsub(pattern = '^.* \\(|\\)$', replacement = '', x = res[,'Item'])))
-  
-  env <- new.env()
-  data(list = nm, package = unique.default(res[,'Package']), envir = env)
-  if (length(ls(envir = env)) != dim(res)[1L]) stop('did not obtain all data ?')
-  return(env)
+  return(ev_)
   
 }
 
 
+#' @rdname packageIQR_S3
+#' 
+#' @details
+#' 
+#' Function [split.packageIQR] is inspired by function `?utils:::print.packageIQR`.
+#' 
+#' @examples
+#' x = data(package = c('datasets', 'survival'))
+#' x1 = data(package = c('datasets'))
+#' x2 = data(package = c('survival'))
+#' y = split(x)
+#' stopifnot(identical(y$datasets, x1), identical(y$survival, x2))
+#' @export split.packageIQR
+#' @export
+split.packageIQR <- function(x, ...) {
+  
+  f <- 'Package' # hard-coded for now
+  
+  db <- x$results
+  ids <- split.default(seq_len(nrow(db)), f = db[,'Package'])
+  dbs <- lapply(ids, function(id) db[id, , drop = FALSE])
+  
+  ret <- lapply(ids, FUN = function(i) x)
+  mapply(FUN = function(x, db) {
+    x$results <- db
+    return(x)
+  }, x = ret, db = dbs, SIMPLIFY = FALSE)
+  
+}
 
 
 
 
-#dataFromPackage_mget <- function(pkg = 'datasets', what) {
+
+
+
+
+
+
+#dataFromPackage_mget <- function(pkg = 'datasets') {
 #  message('\r', pkg, appendLF = FALSE)
 #  if (length(pkg) != 1L) stop('`pkg` must be length-1')
 #  IQR_ <- data(package = pkg) # ?utils::data looks for 'data' in *many* places
@@ -90,10 +183,7 @@ packageIQR2env <- function(object) {
 #    attach(getNamespace(pkg), name = pkg_)
 #    on.exit(detach(name = pkg_, unload = TRUE, character.only = TRUE))
 #  }
-#  ret <- mget(nm, envir = as.environment(pkg_)) # still fail on some packages...
-#  if (missing(what)) return(ret)
-#  id <- vapply(ret, FUN = inherits, what = what, FUN.VALUE = NA)
-#  return(ret[id])
+#  mget(nm, envir = as.environment(pkg_)) # still fail on some packages...
 #}
 
 
