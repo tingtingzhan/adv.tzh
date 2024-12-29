@@ -31,6 +31,11 @@ dataFromPackage <- function(pkg = 'datasets', what) {
   ev <- data(package = pkg) |> # allow vector `pkg`
     as.environment.packageIQR()
   
+  if (!length(ev)) {
+    message('no data sets found') # mimic ?utils:::print.packageIQR
+    return(invisible())
+  }
+  
   ret <- if (is.list(ev)) {
     tmp <- lapply(ev, FUN = as.list.environment, sorted = TRUE)
     nms <- lapply(tmp, FUN = names)
@@ -116,6 +121,7 @@ dataFromPackage <- function(pkg = 'datasets', what) {
 as.environment.packageIQR <- function(x) {
   
   xs <- split.packageIQR(x)
+  if (!length(xs)) return(invisible())
 
   # same data name could appear in more than one package(s)
   ev_ <- mapply(FUN = function(x, package) {
@@ -152,6 +158,8 @@ split.packageIQR <- function(x, ...) {
   f <- 'Package' # hard-coded for now
   
   db <- x$results
+  if (!length(db)) return(invisible()) # 'no data sets found'
+  
   ids <- split.default(seq_len(nrow(db)), f = db[,'Package'])
   dbs <- lapply(ids, function(id) db[id, , drop = FALSE])
   
