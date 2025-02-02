@@ -7,7 +7,7 @@ Description: To perform advanced manipulation of R packages.
 License: GPL-2
 Encoding: UTF-8
 Imports: cli, devtools, pkgload, tools, utils
-Suggests: stats, Matrix, MASS, nlme, survival, spatstat.data
+Suggests: stats, Matrix, MASS, nlme, survival, spatstat.data, vcdExtra
 Authors@R: c(person(given = "Tingting", family = "Zhan", role =
        c("aut", "cre", "cph"), email =
        c("tingtingzhan@gmail.com")))

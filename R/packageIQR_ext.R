@@ -3,32 +3,34 @@
 #' @description
 #' Obtain all objects available via \link[utils]{data} from a package
 #' 
-#' @param pkg \link[base]{character} scalar or \link[base]{vector}, default `'datasets'`
+#' @param x a `packageIQR` object, returned value from \link[utils]{data}
 #' 
 #' @param what \link[base]{character} scalar or \link[base]{vector}, class(es), see \link[base]{inherits}
 #' 
 
 #' @returns 
-#' Function [dataFromPackage] returns a \link[base]{list} of R objects.
+#' Function [dataFrom] returns a \link[base]{list} of R objects.
 #' 
 #' @references 
 #' \url{https://stackoverflow.com/questions/27709936/get-a-list-of-the-data-sets-in-a-particular-package}
 #' 
 #' @examples
-#' # dataFromPackage(c('datasets', 'MASS'), what = 'data.frame') # next step
+#' # data(package = c('datasets', 'MASS')) |> dataFrom(what = 'data.frame') # next step
 #' 
-#' lapply(dataFromPackage('datasets', what = 'data.frame'), head)
-#' lapply(dataFromPackage('datasets', what = 'numeric'), head)
+#' lapply(dataFrom(what = 'data.frame'), head)
+#' lapply(dataFrom(what = 'numeric'), head)
 #' 
+#' \dontrun{
+#' # similar goal
+#' vcdExtra::datasets(package = 'spatstat.data')
+#' }
 #' @importFrom utils data
 #' @export
-dataFromPackage <- function(pkg = 'datasets', what) {
+dataFrom <- function(x = data(package = 'datasets'), what) {
   
-  #message('\rGetting data from package ', pkg, '                       ', appendLF = FALSE)
+  if (!inherits(x, what = 'packageIQR')) stop('input must be the return of utils::data')
   
-  #env <- as.environment(paste0('package:', pkg)) # only allow len-1 `pkg`
-  
-  ev <- data(package = pkg) |> # allow vector `pkg`
+  ev <- x |> # allow vector `pkg`
     as.environment.packageIQR()
   
   if (!length(ev)) {
@@ -47,6 +49,12 @@ dataFromPackage <- function(pkg = 'datasets', what) {
   id <- vapply(ret, FUN = inherits, what = what, FUN.VALUE = NA)
   return(ret[id])
 }
+
+
+
+
+
+
 
 
 
