@@ -32,6 +32,7 @@
 #' @importFrom devtools as.package
 #' @importFrom pkgload parse_deps
 #' @importFrom tools package_dependencies
+#' @importFrom utils available.packages
 #' @name working_package_dependencies
 #' @export
 working_package_dependencies <- function(
@@ -57,29 +58,57 @@ working_package_dependencies <- function(
   # no matter packages in Depends and Imports are from CRAN or Github
   if (!recursive) return(ret)
   
-  ret2 <- ret |>
+  db <- available.packages() # see inside ?tools::package_dependencies
+  
+  ret1 <- ret |>
+    setdiff(y = R_base_()) |> # `R_base_()` is not on CRAN
+    setdiff(y = vanilla_search_()) # no need to look at dependencies of vanilla search path
+  
+  id <- match(ret1, table = rownames(db), nomatch = NA_integer_)
+  if (anyNA(id)) message('Package(s) ', paste(col_blue(ret1[is.na(id)]), collapse = ', '), ' not available on CRAN')
+  # ?tools::package_dependencies does *not* work with packages from Github!!! 
+  # read more about parameter `db` of ?tools::package_dependencies
+  
+  ret2 <- ret1[!is.na(id)] |>
     package_dependencies(recursive = TRUE, ...) |>
-    # ?tools::package_dependencies does *not* work with packages from Github!!! 
-    # read more about parameter `db` of ?tools::package_dependencies
     unlist(use.names = FALSE) |>
     unique.default() |>
     sort.int()
   
-  if (vanilla.rm) {
-    ret2 <- ret2 |> vanilla_search_rm()
-  }
-  
-  return(ret2)
+  if (!vanilla.rm) return(ret2)
+    
+  return(setdiff(ret2, y = vanilla_search_()))
 
 }
 
 
-vanilla_search_rm <- function(x) {
-  # `x` is a character vector of package names
-  setdiff(x = x, y = c(
-    'base', 'stats', 'graphics', 'grDevices', 'utils', 'datasets', 'methods' # packages loaded with vanilla R
-  ))
-}
+vanilla_search_ <- function() c(
+  # packages loaded with vanilla R
+  'base', 
+  'datasets', 
+  'graphics', 'grDevices', 
+  'methods', 
+  'stats',
+  'utils' 
+)
+
+# https://stackoverflow.com/questions/9700799/difference-between-r-base-and-r-recommended-packages
+R_base_ <- function() c(
+  'base', 
+  'compiler', 
+  'datasets',
+  'graphics', 'grDevices', 'grid',
+  'methods',
+  'parallel',
+  'splines',
+  'stats', 'stats4',
+  'tcltk',
+  'tools',
+  'translations', # not on Mac?
+  'utils'
+)
+
+
 
 
 
@@ -110,14 +139,13 @@ sort_packageDate_ <- function(
     ...
 ) {
   if (!length(pkg)) return(invisible())
+  pkg <- pkg |>
+    setdiff(y = R_base_()) # will just be date of R 
   names(pkg) <- pkg
-  dt <- pkg |>
+  pkg |>
     lapply(FUN = packageDate, ...) |>
-    do.call(what = c) 
-  # ?base::sapply or ?base::vapply cannot keep Date class!
-  if (anyNA(dt)) stop('do not allow')
-  dt[order(dt, decreasing = decreasing)] 
-  # see ?base::sort.default; 'Date' object base::is.object
+    do.call(what = c) |> # ?base::sapply or ?base::vapply cannot keep Date class!
+    sort.default(decreasing = decreasing)
 }
 
 
@@ -137,7 +165,6 @@ sort_packageDate_ <- function(
 #' @export
 package_dependencies_date <- function(...) {
   package_dependencies(...) |>
-    lapply(FUN = vanilla_search_rm) |>
     lapply(FUN = sort_packageDate_)
 }
 
