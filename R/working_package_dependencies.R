@@ -14,6 +14,9 @@
 #' 
 #' @param ... additional parameters of \link[tools]{package_dependencies}
 #' 
+#' @note
+#' I do not know how to make function \link[tools]{package_dependencies} work with packages on Github!
+#' 
 #' @examples
 #' if (FALSE) {
 #' working_package_dependencies('.', recursive = FALSE)
@@ -45,15 +48,19 @@ working_package_dependencies <- function(
   
   tmp <- pkg[c('depends', 'imports')] |>
     unlist(use.names = FALSE)
+  # extracts Depends and Imports fields from DESCRIPTION file
   if (!length(tmp)) return(invisible())
   
   ret <- tmp |>
     lapply(FUN = function(j) parse_deps(j)$name) |>
     unlist(use.names = FALSE)
+  # no matter packages in Depends and Imports are from CRAN or Github
   if (!recursive) return(ret)
   
   ret2 <- ret |>
     package_dependencies(recursive = TRUE, ...) |>
+    # ?tools::package_dependencies does *not* work with packages from Github!!! 
+    # read more about parameter `db` of ?tools::package_dependencies
     unlist(use.names = FALSE) |>
     unique.default() |>
     sort.int()

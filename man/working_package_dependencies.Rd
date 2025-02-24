@@ -25,6 +25,9 @@ of a vanilla R session.  Default \code{TRUE}}
 Similar to \link[tools]{package_dependencies}, but for
 working packages (i.e., directories on hard drive to be loaded by function \link[pkgload]{load_all}).
 }
+\note{
+I do not know how to make function \link[tools]{package_dependencies} work with packages on Github!
+}
 \examples{
 if (FALSE) {
 working_package_dependencies('.', recursive = FALSE)
