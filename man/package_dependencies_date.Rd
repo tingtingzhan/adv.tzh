@@ -10,8 +10,12 @@ package_dependencies_date(...)
 working_package_dependencies_date(...)
 }
 \arguments{
-\item{...}{parameters of \link{package_dependencies_ext} or \link{working_package_dependencies_ext}}
+\item{...}{parameters of functions \link{working_package_dependencies} and \link[tools]{package_dependencies}}
 }
 \description{
 ..
+}
+\examples{
+\dontrun{# needs to set CRAN mirror when ?devtools::check
+package_dependencies_date(c('MASS', 'survival', 'nlme'), recursive = TRUE)}
 }

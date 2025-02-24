@@ -2,36 +2,35 @@
 % Please edit documentation in R/working_package_dependencies.R
 \name{working_package_dependencies}
 \alias{working_package_dependencies}
-\alias{working_package_dependencies_ext}
-\alias{package_dependencies_ext}
 \title{Working Package Dependencies}
 \usage{
-working_package_dependencies(pkg = ".", recursive = TRUE, ...)
-
-working_package_dependencies_ext(...)
-
-package_dependencies_ext(..., recursive = TRUE)
+working_package_dependencies(
+  path = ".",
+  recursive = TRUE,
+  vanilla.rm = TRUE,
+  ...
+)
 }
 \arguments{
-\item{pkg}{\link[base]{character} scalar or \link[base]{vector}}
+\item{path}{\link[base]{character} scalar or \link[base]{vector}}
 
 \item{recursive}{\link[base]{logical} scalar, see \link[tools]{package_dependencies}}
+
+\item{vanilla.rm}{\link[base]{logical} scalar, whether to remove packages in \link[base]{search} path
+of a vanilla R session.  Default \code{TRUE}}
 
 \item{...}{additional parameters of \link[tools]{package_dependencies}}
 }
 \description{
 Similar to \link[tools]{package_dependencies}, but for
-working packages (i.e., directories on hard drive to be loaded by \link[pkgload]{load_all})
+working packages (i.e., directories on hard drive to be loaded by function \link[pkgload]{load_all}).
 }
 \examples{
 if (FALSE) {
-pkg = c('.', '../DanielBiostatistics10th',
-  '../TukeyGH77')
-working_package_dependencies(pkg, recursive = FALSE)
-working_package_dependencies(pkg, recursive = TRUE)
-working_package_dependencies_ext(pkg, recursive = TRUE)
-working_package_dependencies_date(pkg)
+path = c('.', '../DanielBiostatistics10th')
+working_package_dependencies(path, recursive = FALSE)
+working_package_dependencies(path, recursive = TRUE)
+working_package_dependencies(path, recursive = TRUE, vanilla.rm = FALSE)
+working_package_dependencies_date(path)
 }
-
-
 }

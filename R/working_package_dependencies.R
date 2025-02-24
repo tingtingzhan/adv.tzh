@@ -1,73 +1,87 @@
 
-
-# old name [pkg_dis]
-
-
 #' @title Working Package Dependencies
 #' 
 #' @description
 #' Similar to \link[tools]{package_dependencies}, but for 
-#' working packages (i.e., directories on hard drive to be loaded by \link[pkgload]{load_all})
+#' working packages (i.e., directories on hard drive to be loaded by function \link[pkgload]{load_all}).
 #' 
-#' @param pkg \link[base]{character} scalar or \link[base]{vector}
+#' @param path \link[base]{character} scalar or \link[base]{vector}
 #' 
 #' @param recursive \link[base]{logical} scalar, see \link[tools]{package_dependencies}
+#' 
+#' @param vanilla.rm \link[base]{logical} scalar, whether to remove packages in \link[base]{search} path
+#' of a vanilla R session.  Default `TRUE`
 #' 
 #' @param ... additional parameters of \link[tools]{package_dependencies}
 #' 
 #' @examples
 #' if (FALSE) {
-#' pkg = c('.', '../DanielBiostatistics10th',
-#'   '../TukeyGH77')
-#' working_package_dependencies(pkg, recursive = FALSE)
-#' working_package_dependencies(pkg, recursive = TRUE)
-#' working_package_dependencies_ext(pkg, recursive = TRUE)
-#' working_package_dependencies_date(pkg)
+#' path = c('.', '../DanielBiostatistics10th')
+#' working_package_dependencies(path, recursive = FALSE)
+#' working_package_dependencies(path, recursive = TRUE)
+#' working_package_dependencies(path, recursive = TRUE, vanilla.rm = FALSE)
+#' working_package_dependencies_date(path)
 #' }
-#' 
-#' 
 #' @importFrom devtools as.package
 #' @importFrom pkgload parse_deps pkg_name
 #' @importFrom tools package_dependencies
 #' @name working_package_dependencies
 #' @export
-working_package_dependencies <- function(pkg = '.', recursive = TRUE, ...) {
+working_package_dependencies <- function(
+    path = '.', 
+    recursive = TRUE, 
+    vanilla.rm = TRUE,
+    ...
+) {
 
-  if (!is.character(pkg) || anyNA(pkg) || !all(nzchar(pkg))) stop('only takes len-1 character as package name')
+  if (!is.character(path) || anyNA(path) || !all(nzchar(path))) stop('illegal package `path`')
   
-  names(pkg) <- vapply(pkg, FUN = pkg_name, FUN.VALUE = '')
+  names(path) <- vapply(path, FUN = pkg_name, FUN.VALUE = '')
   
-  ret <- lapply(pkg, FUN = function(i) {
-    tmp <- unlist(as.package(x = i)[c('depends', 'imports')], use.names = FALSE)
-    if (!length(tmp)) return(invisible())
-    unlist(lapply(tmp, FUN = function(j) parse_deps(j)$name), use.names = FALSE)
-  })
+  ret <- lapply(path, FUN = dev_package_dependencies)
   
   if (!recursive) return(ret)
   
   lapply(ret, FUN = function(i) {
-    sort.int(unique.default(unlist(package_dependencies(i, recursive = TRUE, ...), use.names = FALSE)))
+    tmp <- package_dependencies(i, recursive = TRUE, ...) |>
+      unlist(use.names = FALSE) |>
+      unique.default() |>
+      sort.int()
+    
+    if (vanilla.rm) {
+      tmp <- tmp |> vanilla_search_rm()
+    }
+    
+    return(tmp)
   })
   
 }
 
 
-#' @rdname working_package_dependencies
-#' @export
-working_package_dependencies_ext <- function(...) {
-  lapply(working_package_dependencies(...), FUN = setdiff, y = c(
+vanilla_search_rm <- function(x) {
+  # `x` is a character vector of package names
+  setdiff(x = x, y = c(
     'base', 'stats', 'graphics', 'grDevices', 'utils', 'datasets', 'methods' # packages loaded with vanilla R
   ))
 }
 
-#' @rdname working_package_dependencies
-#' @importFrom tools package_dependencies
-#' @export
-package_dependencies_ext <- function(..., recursive = TRUE) {
-  lapply(package_dependencies(..., recursive = recursive), FUN = setdiff, y = c(
-    'base', 'stats', 'graphics', 'grDevices', 'utils', 'datasets', 'methods' # packages loaded with vanilla R
-  ))
+
+dev_package_dependencies <- function(x) {
+  # `x` is length-1 'character'
+  # cannot use ?tools::package_dependencies here!!
+  
+  tmp <- as.package(x = x)[c('depends', 'imports')] |>
+    unlist(use.names = FALSE)
+  
+  if (!length(tmp)) return(invisible())
+  
+  tmp |>
+    lapply(FUN = function(j) parse_deps(j)$name) |>
+    unlist(use.names = FALSE)
+  
 }
+
+
 
 
 
@@ -96,7 +110,9 @@ sort_packageDate_ <- function(
 ) {
   if (!length(pkg)) return(invisible())
   names(pkg) <- pkg
-  dt <- do.call(c, args = lapply(pkg, FUN = packageDate, ...)) 
+  dt <- pkg |>
+    lapply(FUN = packageDate, ...) |>
+    do.call(what = c) 
   # ?base::sapply or ?base::vapply cannot keep Date class!
   if (anyNA(dt)) stop('do not allow')
   dt[order(dt, decreasing = decreasing)] 
@@ -110,16 +126,24 @@ sort_packageDate_ <- function(
 #' @description
 #' ..
 #' 
-#' @param ... parameters of [package_dependencies_ext] or [working_package_dependencies_ext]
+#' @param ... parameters of functions [working_package_dependencies] and \link[tools]{package_dependencies}
 #' 
+#' @examples
+#' \dontrun{# needs to set CRAN mirror when ?devtools::check
+#' package_dependencies_date(c('MASS', 'survival', 'nlme'), recursive = TRUE)}
+#' @importFrom tools package_dependencies
 #' @name package_dependencies_date
 #' @export
 package_dependencies_date <- function(...) {
-  lapply(package_dependencies_ext(...), FUN = sort_packageDate_)
+  package_dependencies(...) |>
+    lapply(FUN = vanilla_search_rm) |>
+    lapply(FUN = sort_packageDate_)
 }
+
 
 #' @rdname package_dependencies_date
 #' @export
 working_package_dependencies_date <- function(...) {
-  lapply(working_package_dependencies_ext(...), FUN = sort_packageDate_)
+  working_package_dependencies(...) |>
+    lapply(FUN = sort_packageDate_)
 }

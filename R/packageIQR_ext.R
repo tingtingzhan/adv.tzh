@@ -181,28 +181,6 @@ split.packageIQR <- function(x, ...) {
 
 
 
-
-
-
-
-
-
-
-#dataFromPackage_mget <- function(pkg = 'datasets') {
-#  message('\r', pkg, appendLF = FALSE)
-#  if (length(pkg) != 1L) stop('`pkg` must be length-1')
-#  IQR_ <- data(package = pkg) # ?utils::data looks for 'data' in *many* places
-#  res <- IQR_[['results']]
-# nm <- vapply(strsplit(res[,'Item'], split = ' '), FUN = `[[`, 1L, FUN.VALUE = '')
-#  pkg_ <- paste0('package:', pkg)
-#  if (!(pkg_ %in% search())) {
-#    attach(getNamespace(pkg), name = pkg_)
-#    on.exit(detach(name = pkg_, unload = TRUE, character.only = TRUE))
-#  }
-#  mget(nm, envir = as.environment(pkg_)) # still fail on some packages...
-#}
-
-
   
   
 
