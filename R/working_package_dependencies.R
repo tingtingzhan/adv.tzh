@@ -5,7 +5,7 @@
 #' Similar to \link[tools]{package_dependencies}, but for 
 #' working packages (i.e., directories on hard drive to be loaded by function \link[pkgload]{load_all}).
 #' 
-#' @param path \link[base]{character} scalar or \link[base]{vector}
+#' @param path \link[base]{character} scalar
 #' 
 #' @param recursive \link[base]{logical} scalar, see \link[tools]{package_dependencies}
 #' 
@@ -16,14 +16,18 @@
 #' 
 #' @examples
 #' if (FALSE) {
-#' path = c('.', '../DanielBiostatistics10th')
-#' working_package_dependencies(path, recursive = FALSE)
-#' working_package_dependencies(path, recursive = TRUE)
-#' working_package_dependencies(path, recursive = TRUE, vanilla.rm = FALSE)
-#' working_package_dependencies_date(path)
+#' working_package_dependencies('.', recursive = FALSE)
+#' working_package_dependencies('.', recursive = TRUE)
+#' working_package_dependencies('.', recursive = TRUE, vanilla.rm = FALSE)
+#' working_package_dependencies_date('.')
+#' 
+#' working_package_dependencies('../DanielBiostatistics10th', recursive = FALSE)
+#' working_package_dependencies('../DanielBiostatistics10th', recursive = TRUE)
+#' working_package_dependencies('../DanielBiostatistics10th', recursive = TRUE, vanilla.rm = FALSE)
+#' working_package_dependencies_date('../DanielBiostatistics10th')
 #' }
 #' @importFrom devtools as.package
-#' @importFrom pkgload parse_deps pkg_name
+#' @importFrom pkgload parse_deps
 #' @importFrom tools package_dependencies
 #' @name working_package_dependencies
 #' @export
@@ -34,27 +38,32 @@ working_package_dependencies <- function(
     ...
 ) {
 
-  if (!is.character(path) || anyNA(path) || !all(nzchar(path))) stop('illegal package `path`')
+  if (!is.character(path) || length(path) != 1L || is.na(path) || !nzchar(path)) stop('illegal package `path`')
   
-  names(path) <- vapply(path, FUN = pkg_name, FUN.VALUE = '')
+  pkg <- path |> 
+    as.package()
   
-  ret <- lapply(path, FUN = dev_package_dependencies)
+  tmp <- pkg[c('depends', 'imports')] |>
+    unlist(use.names = FALSE)
+  if (!length(tmp)) return(invisible())
   
+  ret <- tmp |>
+    lapply(FUN = function(j) parse_deps(j)$name) |>
+    unlist(use.names = FALSE)
   if (!recursive) return(ret)
   
-  lapply(ret, FUN = function(i) {
-    tmp <- package_dependencies(i, recursive = TRUE, ...) |>
-      unlist(use.names = FALSE) |>
-      unique.default() |>
-      sort.int()
-    
-    if (vanilla.rm) {
-      tmp <- tmp |> vanilla_search_rm()
-    }
-    
-    return(tmp)
-  })
+  ret2 <- ret |>
+    package_dependencies(recursive = TRUE, ...) |>
+    unlist(use.names = FALSE) |>
+    unique.default() |>
+    sort.int()
   
+  if (vanilla.rm) {
+    ret2 <- ret2 |> vanilla_search_rm()
+  }
+  
+  return(ret2)
+
 }
 
 
@@ -65,21 +74,6 @@ vanilla_search_rm <- function(x) {
   ))
 }
 
-
-dev_package_dependencies <- function(x) {
-  # `x` is length-1 'character'
-  # cannot use ?tools::package_dependencies here!!
-  
-  tmp <- as.package(x = x)[c('depends', 'imports')] |>
-    unlist(use.names = FALSE)
-  
-  if (!length(tmp)) return(invisible())
-  
-  tmp |>
-    lapply(FUN = function(j) parse_deps(j)$name) |>
-    unlist(use.names = FALSE)
-  
-}
 
 
 
@@ -145,5 +139,5 @@ package_dependencies_date <- function(...) {
 #' @export
 working_package_dependencies_date <- function(...) {
   working_package_dependencies(...) |>
-    lapply(FUN = sort_packageDate_)
+    sort_packageDate_()
 }

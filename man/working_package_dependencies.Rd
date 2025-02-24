@@ -12,7 +12,7 @@ working_package_dependencies(
 )
 }
 \arguments{
-\item{path}{\link[base]{character} scalar or \link[base]{vector}}
+\item{path}{\link[base]{character} scalar}
 
 \item{recursive}{\link[base]{logical} scalar, see \link[tools]{package_dependencies}}
 
@@ -27,10 +27,14 @@ working packages (i.e., directories on hard drive to be loaded by function \link
 }
 \examples{
 if (FALSE) {
-path = c('.', '../DanielBiostatistics10th')
-working_package_dependencies(path, recursive = FALSE)
-working_package_dependencies(path, recursive = TRUE)
-working_package_dependencies(path, recursive = TRUE, vanilla.rm = FALSE)
-working_package_dependencies_date(path)
+working_package_dependencies('.', recursive = FALSE)
+working_package_dependencies('.', recursive = TRUE)
+working_package_dependencies('.', recursive = TRUE, vanilla.rm = FALSE)
+working_package_dependencies_date('.')
+
+working_package_dependencies('../DanielBiostatistics10th', recursive = FALSE)
+working_package_dependencies('../DanielBiostatistics10th', recursive = TRUE)
+working_package_dependencies('../DanielBiostatistics10th', recursive = TRUE, vanilla.rm = FALSE)
+working_package_dependencies_date('../DanielBiostatistics10th')
 }
 }
