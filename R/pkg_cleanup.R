@@ -68,7 +68,7 @@ pkg_cleanup <- function(pkg = '.', rm_o = FALSE) {
   # './results' (deprecated) created by my ?writeRproj_*
   # './lib' created by ?htmltools::save_html
   # './rmd' (deprecated)
-  # './html' and './word' created by ?renderRproj
+  # './html' and './word' created by ?rmarkdown.tzh::render_
   # './tmp' (deprecated) created by files in ./demo/learn_*.R
   
   # ALREADY DONE!!!!
