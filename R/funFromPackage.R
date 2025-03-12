@@ -6,47 +6,55 @@
 #' @description
 #' Obtain all \link[base]{function}s defined (*not* imported) in a package
 #' 
-#' @param pkg \link[base]{character} scalar, package name
+#' @param x see **Usage**
 #' 
-#' @param all.names \link[base]{logical} scalar, see \link[base]{ls}.
-#' Default `TRUE` to get functions with name starting with `'.'`
+#' @param what ..
 #' 
-#' @param ... additional parameters of \link[base]{ls}
+#' @param all.names,sorted,... additional parameters of \link[base]{ls}
 #' 
 #' @details
-#' Function [funFromPackage] ..
-#' 
-#' Function [funFromThisPackage] ..
+#' Function [objectFrom] ..
 #' 
 #' @returns 
 #' 
-#' Functions [funFromPackage] and [funFromThisPackage] 
-#' both return a \link[base]{character} \link[base]{vector} of function names.
+#' Functions [objectFrom()] returns a \link[base]{character} \link[base]{vector} of function names.
 #' 
 #' @references
 #' \url{https://stackoverflow.com/questions/8696158/find-all-functions-including-private-in-a-package}
 #' 
 #' @examples 
-#' funFromPackage('stats', pattern = '\\.test$')
+#' objectFrom('stats', pattern = '\\.test$')
+#' objectFrom('stats', what = 'selfStart')
+#' # objectFrom('.') # for developer only
 #' 
-#' @name funFromPackage
+#' @name objectFrom
 #' @export
-funFromPackage <- function(
-    pkg, 
-    all.names = TRUE, 
-    ...
-) {
-  ls(envir = getNamespace(name = pkg), all.names = all.names, ...)
+objectFrom <- function(x, ...) UseMethod(generic = 'objectFrom')
+
+#' @rdname objectFrom
+#' @export objectFrom.environment
+#' @export
+objectFrom.environment <- function(x, what, all.names = TRUE, sorted = TRUE, ...) {
+  
+  v <- ls(envir = x, all.names = all.names, sorted = sorted, ...)
+  if (missing(what)) return(v)
+  
+  id <- v |>
+    mget(envir = x) |>
+    vapply(FUN = inherits, what = what, FUN.VALUE = NA)
+  return(v[id])
+  
 }
 
-
-#' @rdname funFromPackage
+#' @rdname objectFrom
 #' @importFrom pkgload pkg_name
+#' @export objectFrom.character
 #' @export
-funFromThisPackage <- function(all.names = TRUE, ...) {
-  ls(envir = getNamespace(name = pkg_name('.')), all.names = all.names, ...)
+objectFrom.character <- function(x, ...) {
+  if (length(x) != 1L) stop('must be scalar')
+  if (dir.exists(x)) x <- pkg_name(path = x)
+  x |> getNamespace() |> objectFrom.environment(...)
 }
-
 
 
 
