@@ -16,7 +16,7 @@ Default \code{'https://cran.rstudio.com/'},
 which is the return of \code{getOption('repos')} when using RStudio}
 }
 \value{
-Function \link{nextCRANversion} returns a \link[base]{numeric_version} object.
+Function \code{\link[=nextCRANversion]{nextCRANversion()}} returns a \link[base]{numeric_version} object.
 }
 \description{
 ..
@@ -26,7 +26,7 @@ If package \pkg{name} is not available on CRAN, i.e., this is the first release,
 then \code{'0.1.0'} is returned.
 
 Otherwise, if \code{Version} is missing,
-a patch to the current CRAN version is created, via \link{patchVersion}.
+a patch to the current CRAN version is created, via \link{patch_}.
 
 Otherwise, if user-provided \code{Version} is older than CRAN version,
 then the patched CRAN version, as described previously, is returned.

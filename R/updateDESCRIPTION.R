@@ -16,12 +16,12 @@
 #' 
 #' }
 #' 
-#' 
 #' @export
-updateDESCRIPTION <- function(pkg) {
+updateDESCRIPTION <- function(pkg = '.') {
   
-  pkg <- normalizePath(pkg)
-  name <- basename(pkg)
+  #pkg <- normalizePath(pkg)
+  #name <- basename(pkg)
+  name <- pkg |> normalizePath() |> basename()
   
   if (!file.exists(DESC_file <- file.path(pkg, 'DESCRIPTION'))) stop('missing DESCRIPTION file?')
   dcf <- read.dcf(file = DESC_file) # 'matrix'
@@ -42,6 +42,6 @@ updateDESCRIPTION <- function(pkg) {
   # I have published to CRAN without 'Author' field
   
   write.dcf(dcf, file = DESC_file) # it's not read-only
-  system(paste('open', DESC_file))
+
 }
 
