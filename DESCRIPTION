@@ -1,13 +1,13 @@
 Package: adv.tzh
 Type: Package
 Title: Advanced Manipulation of R Packages
-Version: 0.1.0
+Version: 0.1.0.9000
 Date: 2025-02-24
 Description: To perform advanced manipulation of R
       packages.
 License: GPL-2
 Encoding: UTF-8
-Imports: cli, devtools, pkgload, tools, utils
+Imports: cli, devtools, pkgload, tools, usethis, utils
 Suggests: stats, Matrix, MASS, nlme, survival,
       spatstat.data, vcdExtra
 Authors@R: c(person(given = "Tingting", family = "Zhan",

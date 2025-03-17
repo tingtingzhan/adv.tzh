@@ -27,6 +27,8 @@
 #' @export
 patch_ <- function(v) {
   
+  .Deprecated(new = 'usethis::use_version()')
+  
   v <- v |> package_version()
   if (length(v) != 1L) stop('no need to vectorize')
   # print.default(v) # to understand 'numeric_version' object

@@ -16,20 +16,27 @@
 #' 
 #' }
 #' 
+#' @importFrom usethis use_version
 #' @export
-updateDESCRIPTION <- function(pkg = '.') {
+updateDESCRIPTION <- function(
+    pkg = '.',
+    which = 'dev',
+    ...
+) {
   
   #pkg <- normalizePath(pkg)
   #name <- basename(pkg)
   name <- pkg |> normalizePath() |> basename()
   
+  use_version(which = which)
+  
   if (!file.exists(DESC_file <- file.path(pkg, 'DESCRIPTION'))) stop('missing DESCRIPTION file?')
   dcf <- read.dcf(file = DESC_file) # 'matrix'
   nm <- dimnames(dcf)[[2]]
   
-  if (any(nm == 'Version')) {
-    dcf[, 'Version'] <- format.numeric_version(nextCRANversion(name = name, Version = dcf[, 'Version']))
-  } else dcf <- cbind(dcf, Version = format.numeric_version(nextCRANversion(name = name)))
+  #if (any(nm == 'Version')) {
+  #  dcf[, 'Version'] <- format.numeric_version(nextCRANversion(name = name, Version = dcf[, 'Version']))
+  #} else dcf <- cbind(dcf, Version = format.numeric_version(nextCRANversion(name = name)))
   # ?base::format.numeric_version inside ?base::as.character.numeric_version
   
   if (any(nm == 'Date')) {

@@ -4,7 +4,7 @@
 \alias{updateDESCRIPTION}
 \title{Update DESCRIPTION File}
 \usage{
-updateDESCRIPTION(pkg = ".")
+updateDESCRIPTION(pkg = ".", which = "dev", ...)
 }
 \arguments{
 \item{pkg}{\link[base]{character} scalar, directory of the package}
