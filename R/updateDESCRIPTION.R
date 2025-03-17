@@ -5,12 +5,16 @@
 #' 
 #' @param pkg \link[base]{character} scalar, directory of the package
 #' 
+#' @param which see function \link[usethis]{use_version}
+#' 
+#' @param ... additional parameters, currently not in use
+#' 
 #' @details
 #' Update the DESCRIPTION file, so that
 #' 
 #' \describe{
 #' 
-#' \item{`Version`}{is the next version on CRAN, via [nextCRANversion]}
+#' \item{`Version`}{using \link[usethis]{use_version} with `which = 'dev'`}
 #' 
 #' \item{`Date`}{is today (via \link[base]{Sys.Date})} 
 #' 
@@ -24,31 +28,21 @@ updateDESCRIPTION <- function(
     ...
 ) {
   
-  #pkg <- normalizePath(pkg)
-  #name <- basename(pkg)
   name <- pkg |> normalizePath() |> basename()
   
-  use_version(which = which)
-  
-  if (!file.exists(DESC_file <- file.path(pkg, 'DESCRIPTION'))) stop('missing DESCRIPTION file?')
-  dcf <- read.dcf(file = DESC_file) # 'matrix'
+  if (!file.exists(DESC <- file.path(pkg, 'DESCRIPTION'))) stop('missing DESCRIPTION file?')
+  dcf <- read.dcf(file = DESC) # 'matrix'
   nm <- dimnames(dcf)[[2]]
-  
-  #if (any(nm == 'Version')) {
-  #  dcf[, 'Version'] <- format.numeric_version(nextCRANversion(name = name, Version = dcf[, 'Version']))
-  #} else dcf <- cbind(dcf, Version = format.numeric_version(nextCRANversion(name = name)))
-  # ?base::format.numeric_version inside ?base::as.character.numeric_version
   
   if (any(nm == 'Date')) {
     dcf[, 'Date'] <- as.character.Date(Sys.Date())
   } else dcf <- cbind(dcf, Date = as.character.Date(Sys.Date()))
   
-  #Author <- paste(format(eval(str2lang(dcf[, 'Authors@R'])), include = c('given', 'family', 'role', 'comment')), collapse = ',\n')
-  # ?utils:::as.character.person, workhorse ?utils:::format.person
-  # CRAN finally takes care of this, since Spring 2024 !!!
-  # I have published to CRAN without 'Author' field
+  # 'Author' field is determined by 'Authors@R' field
   
-  write.dcf(dcf, file = DESC_file) # it's not read-only
+  write.dcf(dcf, file = DESC) # it's not read-only
+  
+  use_version(which = which)
 
 }
 

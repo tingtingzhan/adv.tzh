@@ -8,6 +8,10 @@ updateDESCRIPTION(pkg = ".", which = "dev", ...)
 }
 \arguments{
 \item{pkg}{\link[base]{character} scalar, directory of the package}
+
+\item{which}{see function \link[usethis]{use_version}}
+
+\item{...}{additional parameters, currently not in use}
 }
 \description{
 Update DESCRIPTION file
@@ -17,7 +21,7 @@ Update the DESCRIPTION file, so that
 
 \describe{
 
-\item{\code{Version}}{is the next version on CRAN, via \link{nextCRANversion}}
+\item{\code{Version}}{using \link[usethis]{use_version} with \code{which = 'dev'}}
 
 \item{\code{Date}}{is today (via \link[base]{Sys.Date})}
 
