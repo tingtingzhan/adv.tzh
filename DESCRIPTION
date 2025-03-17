@@ -1,7 +1,7 @@
 Package: adv.tzh
 Type: Package
 Title: Advanced Manipulation of R Packages
-Version: 0.1.0.9000
+Version: 0.1.0.9001
 Date: 2025-02-24
 Description: To perform advanced manipulation of R
       packages.
