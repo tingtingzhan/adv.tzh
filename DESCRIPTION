@@ -1,18 +1,16 @@
 Package: adv.tzh
 Type: Package
 Title: Advanced Manipulation of R Packages
-Version: 0.1.0.9001
-Date: 2025-02-24
-Description: To perform advanced manipulation of R
-      packages.
+Version: 0.1.0
+Date: 2025-03-17
+Description: To perform advanced manipulation of R packages.
 License: GPL-2
 Encoding: UTF-8
 Imports: cli, devtools, pkgload, tools, usethis, utils
-Suggests: stats, Matrix, MASS, nlme, survival,
-      spatstat.data, vcdExtra
-Authors@R: c(person(given = "Tingting", family = "Zhan",
-      role = c("aut", "cre"), email =
-      c("tingtingzhan@gmail.com")))
+Suggests: stats, Matrix, MASS, nlme, survival, spatstat.data,
+       vcdExtra
+Authors@R: c(person(given = "Tingting", family = "Zhan", role =
+       c("aut", "cre"), email = c("tingtingzhan@gmail.com")))
 Language: en-US
 Roxygen: list(markdown = TRUE)
 Depends: R (>= 4.4.0)
