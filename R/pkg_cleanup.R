@@ -26,7 +26,6 @@
 #' }
 #' # # only in devtools::load_all('.') mode!!
 #' 
-#' @importFrom devtools as.package
 #' @importFrom pkgload parse_deps
 #' @export
 pkg_cleanup <- function(pkg = '.', rm_o = FALSE) {

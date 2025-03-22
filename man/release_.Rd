@@ -4,7 +4,7 @@
 \alias{release_}
 \title{Auxiliary Tasks before \link[devtools]{release}}
 \usage{
-release_(pkg)
+release_(pkg = ".")
 }
 \arguments{
 \item{pkg}{\link[base]{character} scalar, directory of the package}

@@ -15,7 +15,7 @@
 #' 
 #' @importFrom devtools check check_win_devel release 
 #' @export
-release_ <- function(pkg) { # , to_release = TRUE
+release_ <- function(pkg = '.') { # , to_release = TRUE
   
   pkg <- normalizePath(pkg)
 

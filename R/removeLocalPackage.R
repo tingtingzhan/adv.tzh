@@ -7,9 +7,11 @@
 #' 
 #' @param name \link[base]{character} scalar, name of the package
 #'  
+#' @importFrom pkgload pkg_name
 #' @importFrom utils installed.packages remove.packages
 #' @export
-removeLocalPackage <- function(name) {
+removeLocalPackage <- function(name = '.') {
+  if (identical(name, '.')) name <- pkg_name('.')
   search_name <- paste0('package:', name)
   if (search_name %in% search()) detach(name = search_name, unload = TRUE, character.only = TRUE)
   for (lib in .libPaths()) {

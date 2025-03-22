@@ -16,7 +16,7 @@
 #' @importFrom devtools build_manual document spell_check
 #' @importFrom utils capture.output
 #' @export
-document_ <- function(pkg) {
+document_ <- function(pkg = '.') {
   pkg <- normalizePath(pkg)
   name <- basename(pkg)
   path <- dirname(pkg)

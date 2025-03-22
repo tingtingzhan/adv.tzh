@@ -4,7 +4,7 @@
 \alias{document_}
 \title{Auxiliary Tasks of \link[devtools]{document}}
 \usage{
-document_(pkg)
+document_(pkg = ".")
 }
 \arguments{
 \item{pkg}{\link[base]{character} scalar, directory of the package}

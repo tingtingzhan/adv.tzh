@@ -4,7 +4,7 @@
 \alias{removeLocalPackage}
 \title{Remove Old Version of a Package}
 \usage{
-removeLocalPackage(name)
+removeLocalPackage(name = ".")
 }
 \arguments{
 \item{name}{\link[base]{character} scalar, name of the package}
