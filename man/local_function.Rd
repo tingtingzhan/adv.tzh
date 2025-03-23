@@ -39,7 +39,7 @@ Helper function \link{load_local_obj} does not have a returned value
 Functions in a Package, defined inside \link[base]{local}
 }
 \details{
-Helper function \link{.local_obj} provides the names of other objects
+Helper function \code{\link[=.local_obj]{.local_obj()}} provides the names of other objects
 in the \link[base]{local} environment of function \code{fun} definition.
 
 Helper function \link{print_local_obj} prints the returned value of function \link{.local_obj}

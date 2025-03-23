@@ -32,22 +32,26 @@ local_function <- function(pkg, ...) {
   fn <- x[vapply(mget(x, envir = ns), FUN = is.function, FUN.VALUE = NA)]
   
   ret <- lapply(fn, FUN = function(i) { # (i = fn[[1L]])
-    eval(call(name = 'print_local_obj', call(name = ':::', as.name(pkg), as.name(i))))
+    call(name = 'print_local_obj', call(name = ':::', as.name(pkg), as.name(i))) |> 
+      eval()
   })
   
   id <- (lengths(ret, use.names = FALSE) > 0L)
   
   if (!any(id)) {
-    message(sprintf(fmt = 'None of %d functions in package %s are defined via ?base::local, etc.', length(id), style_bold(col_magenta(pkg))))
+    sprintf(fmt = 'None of %d functions in package %s are defined via ?base::local, etc.', length(id), pkg |> col_magenta() |> style_bold()) |> 
+      message()
     return(invisible())
   } 
   
   message(paste(unlist(ret[id]), collapse = '\n'))
   message()
-  message(sprintf(
+  sprintf(
     fmt = '%s functions in package %s are defined via ?base::local, etc.', 
-    style_bold(col_green(sprintf(fmt = '%d/%d; %.1f%%', sum(id), length(id), 1e2*mean(id)))), 
-    style_bold(col_cyan(pkg))))
+    sprintf(fmt = '%d/%d; %.1f%%', sum(id), length(id), 1e2*mean(id)) |> col_green() |> style_bold(), 
+    pkg |> col_cyan() |> style_bold()
+  ) |>
+    message()
   
   return(invisible())
   
@@ -60,7 +64,7 @@ local_function <- function(pkg, ...) {
 #' @param fun \link[base]{function}, must be given in the format of `pkg::function`
 #' 
 #' @details
-#' Helper function [.local_obj] provides the names of other objects 
+#' Helper function [.local_obj()] provides the names of other objects 
 #' in the \link[base]{local} environment of function `fun` definition.
 #' 
 #' @returns
@@ -87,7 +91,8 @@ local_function <- function(pkg, ...) {
   
   if (isNamespace(env)) return(invisible()) # ?base::getNamespace of this packge, or some other packages
   
-  setdiff(ls(envir = env, all.names = TRUE), y = as.character(fun.name[[3L]]))
+  ls(envir = env, all.names = TRUE) |>
+    setdiff(y = as.character(fun.name[[3L]]))
   
 }
 
@@ -106,15 +111,16 @@ local_function <- function(pkg, ...) {
 #' @export
 print_local_obj <- function(fun) {
   
-  x <- eval(call(name = '.local_obj', fun = substitute(fun)))
+  x <- call(name = '.local_obj', fun = substitute(fun)) |> 
+    eval()
   if (!length(x)) return(invisible())
   
   return(sprintf(
     fmt = 'Local envir of %s contains %s', 
-    style_bold(col_blue(as.character(substitute(fun)[[3L]]))),
+    (substitute(fun)[[3L]]) |> as.character() |> col_blue() |> style_bold(),
     if (length(x)) {
-      paste0(style_bold(col_yellow(x)), collapse = ', ')
-    } else style_bold(col_green('nothing else'))
+      x |> col_yellow() |> style_bold() |> paste0(collapse = ', ')
+    } else 'nothing else' |> col_green() |> style_bold()
   ))
   
 } 
@@ -137,7 +143,8 @@ print_local_obj <- function(fun) {
 #' @export
 load_local_obj <- function(fun, envir = .GlobalEnv) {
   
-  x <- eval(call(name = '.local_obj', fun = substitute(fun)))
+  x <- call(name = '.local_obj', fun = substitute(fun)) |> 
+    eval()
   if (!length(x)) return(invisible())
   
   from <- environment(fun = fun)

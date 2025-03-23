@@ -70,7 +70,7 @@ package_skeleton_ext <- function(
   unlink(file.path(pkg, 'man'), recursive = TRUE) # delete directory
   file.remove(file.path(pkg, 'Read-and-delete-me'))
   file.remove(file.path(pkg, 'NAMESPACE')) # \CRANpkg{roxygen2} will generate NAMESPACE
-  system(paste0('open \'', normalizePath(pkg), '\'')) # for my debug
+  paste0('open \'', normalizePath(pkg), '\'') |> system() # for my debug
   
   if (length(rda_files)) {
     # allow vector `rda_files`; some data could be used in more than one packages

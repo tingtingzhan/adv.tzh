@@ -134,7 +134,9 @@ as.environment.packageIQR <- function(x) {
   # same data name could appear in more than one package(s)
   ev_ <- mapply(FUN = function(x, package) {
     ev <- new.env()
-    nm <- sort.default(unique.default(gsub(pattern = '^.* \\(|\\)$', replacement = '', x = x$results[,'Item'])))
+    nm <- gsub(pattern = '^.* \\(|\\)$', replacement = '', x = x$results[,'Item']) |> 
+      unique.default() |> 
+      sort.default()
     data(list = nm, package = package, envir = ev) # must have `list` to assign object(s) to `envir`
     if (length(ls(envir = ev)) != dim(x$results)[1L]) stop('do not allow')
     return(ev)
