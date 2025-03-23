@@ -19,7 +19,7 @@ local_function(pkg, ...)
 \value{
 Function \link{local_function} does not have a returned value.
 
-Helper function \link{.local_obj} returns a \link[base]{character} \link[base]{vector}.
+Helper function \code{\link[=.local_obj]{.local_obj()}} returns a \link[base]{character} \link[base]{vector}.
 }
 \description{
 Functions in a Package, defined inside \link[base]{local}
@@ -39,6 +39,7 @@ local_function('tools')
 local_function('MASS')
 local_function('nlme')
 local_function('survival')
+# Helper function
 .local_obj(fun = base::sum) # primitive
 .local_obj(fun = base::sub) # not defined in local environment
 .local_obj(fun = stats:::update.packageStatus) # actually ?utils:::update.packageStatus

@@ -74,9 +74,10 @@ local_function <- function(pkg, ...) {
 #' in the \link[base]{local} environment of function `fun` definition.
 #' 
 #' @returns
-#' Helper function [.local_obj] returns a \link[base]{character} \link[base]{vector}.
+#' Helper function [.local_obj()] returns a \link[base]{character} \link[base]{vector}.
 #' 
 #' @examples
+#' # Helper function
 #' .local_obj(fun = base::sum) # primitive
 #' .local_obj(fun = base::sub) # not defined in local environment
 #' .local_obj(fun = stats:::update.packageStatus) # actually ?utils:::update.packageStatus
@@ -134,12 +135,9 @@ local_function <- function(pkg, ...) {
 #' @export
 print.local_obj <- function(x, details = FALSE, ...) {
   
-  fn <- x |> attr(which = 'main_function', exact = TRUE)
-  env <- x |> attr(which = 'envir', exact = TRUE)
-  
   sprintf(
     fmt = 'Local envir of %s contains %s', 
-    fn |> col_blue() |> style_bold(),
+    x |> attr(which = 'main_function', exact = TRUE) |> col_blue() |> style_bold(),
     if (length(x)) {
       x |> col_yellow() |> style_bold() |> paste0(collapse = ', ')
     } else 'nothing else' |> col_green() |> style_bold()
@@ -149,53 +147,13 @@ print.local_obj <- function(x, details = FALSE, ...) {
   if (details) {
     x |>
       setNames(nm = x) |>
-      lapply(FUN = get, envir = env) |>
+      lapply(FUN = get, envir = x |> attr(which = 'envir', exact = TRUE)) |>
       print()
   }
   
   return(invisible())
   
 } 
-
-
-
-
-# @rdname local_function
-# 
-# @param envir an \link[base]{environment} to load the \link[base]{local} objects.
-# Default `.GlobalEnv`
-# 
-# @details
-# Helper function [load_local_obj()] loads the returned value of function [.local_obj()]
-# into a user-specified \link[base]{environment}.
-# 
-# @returns 
-# Helper function [load_local_obj()] does not have a returned value
-# 
-# @examples
-# load_local_obj(fun = base::.doSortWrap)
-# @export
-#load_local_obj <- function(fun, envir = .GlobalEnv) {
-  
-#.Defunct(new = 'print.local_obj(., details = TRUE)')
-#  x <- call(name = '.local_obj', fun = substitute(fun)) |> 
-#    eval()
-#  if (!length(x)) return(invisible())
-  
-  #from <- environment(fun = fun)
-  #lapply(x, FUN = function(i) { # (i = x[[1L]])
-  #  assign(x = i, value = get(x = i, envir = from), envir = envir)
-  #})
-  
-#  return(invisible())
-  
-#}
-
-
-
-
-
-
 
 
 
