@@ -3,17 +3,11 @@
 \name{local_function}
 \alias{local_function}
 \alias{.local_obj}
-\alias{print_local_obj}
-\alias{load_local_obj}
 \title{Functions in a Package, defined inside \link[base]{local}}
 \usage{
 local_function(pkg, ...)
 
 .local_obj(fun)
-
-print_local_obj(fun)
-
-load_local_obj(fun, envir = .GlobalEnv)
 }
 \arguments{
 \item{pkg}{\link[base]{character} scalar}
@@ -21,19 +15,11 @@ load_local_obj(fun, envir = .GlobalEnv)
 \item{...}{additional parameters, currently not in use}
 
 \item{fun}{\link[base]{function}, must be given in the format of \verb{pkg::function}}
-
-\item{envir}{an \link[base]{environment} to load the \link[base]{local} objects.
-Default \code{.GlobalEnv}}
 }
 \value{
 Function \link{local_function} does not have a returned value.
 
 Helper function \link{.local_obj} returns a \link[base]{character} \link[base]{vector}.
-
-Helper function \link{print_local_obj} returns an ANSI string,
-see \link[cli]{ansi-styles}.
-
-Helper function \link{load_local_obj} does not have a returned value
 }
 \description{
 Functions in a Package, defined inside \link[base]{local}
@@ -41,12 +27,6 @@ Functions in a Package, defined inside \link[base]{local}
 \details{
 Helper function \code{\link[=.local_obj]{.local_obj()}} provides the names of other objects
 in the \link[base]{local} environment of function \code{fun} definition.
-
-Helper function \link{print_local_obj} prints the returned value of function \link{.local_obj}
-in a pretty fashion (with the help of package \CRANpkg{cli}).
-
-Helper function \link{load_local_obj} loads the returned value of function \link{.local_obj}
-into a user-specified \link[base]{environment}.
 }
 \note{
 Need to \strong{Suggests} for examples to run.
@@ -63,6 +43,4 @@ local_function('survival')
 .local_obj(fun = base::sub) # not defined in local environment
 .local_obj(fun = stats:::update.packageStatus) # actually ?utils:::update.packageStatus
 .local_obj(fun = base::.doSortWrap)
-message(print_local_obj(fun = base::.doSortWrap))
-load_local_obj(fun = base::.doSortWrap)
 }

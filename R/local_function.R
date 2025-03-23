@@ -20,38 +20,44 @@
 #' local_function('nlme')
 #' local_function('survival')
 #' @name local_function
-#' @importFrom cli style_bold col_green col_yellow col_blue col_magenta col_cyan
+#' @importFrom cli cli_text style_bold col_green col_yellow col_blue col_magenta col_cyan
 #' @export
 local_function <- function(pkg, ...) {
   
   ns <- getNamespace(name = pkg)
-  # as.environment(sprintf(fmt = 'package:%s', pkg)) # need to load into search()
-  
+
   # https://stackoverflow.com/questions/12114355/show-names-of-everything-in-a-package
   x <- ls(name = ns, all.names = TRUE, sorted = TRUE)
   fn <- x[vapply(mget(x, envir = ns), FUN = is.function, FUN.VALUE = NA)]
   
-  ret <- lapply(fn, FUN = function(i) { # (i = fn[[1L]])
-    call(name = 'print_local_obj', call(name = ':::', as.name(pkg), as.name(i))) |> 
-      eval()
-  })
-  
+  ret <- fn |> 
+    lapply(FUN = function(i) { # (i = fn[[1L]])
+      call(name = '.local_obj', call(name = ':::', as.symbol(pkg), as.symbol(i))) |> 
+        eval()
+    })
+
   id <- (lengths(ret, use.names = FALSE) > 0L)
   
   if (!any(id)) {
-    sprintf(fmt = 'None of %d functions in package %s are defined via ?base::local, etc.', length(id), pkg |> col_magenta() |> style_bold()) |> 
-      message()
+    sprintf(
+      fmt = 'None of %d functions in package %s are defined via {.fun base::local}, etc.', 
+      length(id), 
+      pkg |> col_magenta() |> style_bold()
+    ) |> 
+      cli_text()
+      message(appendLF = FALSE)
     return(invisible())
   } 
   
-  message(paste(unlist(ret[id]), collapse = '\n'))
+  ret[id] |> lapply(FUN = print.local_obj)
   message()
   sprintf(
-    fmt = '%s functions in package %s are defined via ?base::local, etc.', 
+    fmt = '%s functions in package %s are defined via {.fun base::local}, etc.', 
     sprintf(fmt = '%d/%d; %.1f%%', sum(id), length(id), 1e2*mean(id)) |> col_green() |> style_bold(), 
     pkg |> col_cyan() |> style_bold()
   ) |>
-    message()
+    cli_text() |>
+    message(appendLF = FALSE)
   
   return(invisible())
   
@@ -91,70 +97,99 @@ local_function <- function(pkg, ...) {
   
   if (isNamespace(env)) return(invisible()) # ?base::getNamespace of this packge, or some other packages
   
-  ls(envir = env, all.names = TRUE) |>
-    setdiff(y = as.character(fun.name[[3L]]))
+  main_function <- (fun.name[[3L]]) |> as.character()
   
+  ret <- ls(envir = env, all.names = TRUE) |>
+    setdiff(y = main_function)
+  attr(ret, which = 'main_function') <- main_function
+  attr(ret, which = 'envir') <- env
+  class(ret) <- 'local_obj'
+  return(ret)
 }
 
-#' @rdname local_function
+
+
+
+#' @title print.local_obj
 #' 
-#' @details
-#' Helper function [print_local_obj] prints the returned value of function [.local_obj]
-#' in a pretty fashion (with the help of package \CRANpkg{cli}).
+#' @param x returned object from function [.local_obj()]
+#' 
+#' @param details \link[base]{logical} scalar, whether to print all local objects.
+#' Default `FALSE`.
+#' 
+#' @param ... additional parameters, currently of no use
 #' 
 #' @returns 
-#' Helper function [print_local_obj] returns an ANSI string, 
+#' Function [print.local_obj()] prints in an ANSI string, 
 #' see \link[cli]{ansi-styles}.
 #' 
+#' @returns 
+#' Function [print.local_obj()] does not have a returned value.
+#' 
 #' @examples
-#' message(print_local_obj(fun = base::.doSortWrap))
+#' .local_obj(fun = base::.doSortWrap) |> print(details = TRUE)
+#' @keywords internal
+#' @importFrom stats setNames
+#' @export print.local_obj
 #' @export
-print_local_obj <- function(fun) {
+print.local_obj <- function(x, details = FALSE, ...) {
   
-  x <- call(name = '.local_obj', fun = substitute(fun)) |> 
-    eval()
-  if (!length(x)) return(invisible())
+  fn <- x |> attr(which = 'main_function', exact = TRUE)
+  env <- x |> attr(which = 'envir', exact = TRUE)
   
-  return(sprintf(
+  sprintf(
     fmt = 'Local envir of %s contains %s', 
-    (substitute(fun)[[3L]]) |> as.character() |> col_blue() |> style_bold(),
+    fn |> col_blue() |> style_bold(),
     if (length(x)) {
       x |> col_yellow() |> style_bold() |> paste0(collapse = ', ')
     } else 'nothing else' |> col_green() |> style_bold()
-  ))
+  ) |>
+    message()
+  
+  if (details) {
+    x |>
+      setNames(nm = x) |>
+      lapply(FUN = get, envir = env) |>
+      print()
+  }
+  
+  return(invisible())
   
 } 
 
 
-#' @rdname local_function
-#' 
-#' @param envir an \link[base]{environment} to load the \link[base]{local} objects.
-#' Default `.GlobalEnv`
-#' 
-#' @details
-#' Helper function [load_local_obj] loads the returned value of function [.local_obj]
-#' into a user-specified \link[base]{environment}.
-#' 
-#' @returns 
-#' Helper function [load_local_obj] does not have a returned value
-#' 
-#' @examples
-#' load_local_obj(fun = base::.doSortWrap)
-#' @export
-load_local_obj <- function(fun, envir = .GlobalEnv) {
+
+
+# @rdname local_function
+# 
+# @param envir an \link[base]{environment} to load the \link[base]{local} objects.
+# Default `.GlobalEnv`
+# 
+# @details
+# Helper function [load_local_obj()] loads the returned value of function [.local_obj()]
+# into a user-specified \link[base]{environment}.
+# 
+# @returns 
+# Helper function [load_local_obj()] does not have a returned value
+# 
+# @examples
+# load_local_obj(fun = base::.doSortWrap)
+# @export
+#load_local_obj <- function(fun, envir = .GlobalEnv) {
   
-  x <- call(name = '.local_obj', fun = substitute(fun)) |> 
-    eval()
-  if (!length(x)) return(invisible())
+#.Defunct(new = 'print.local_obj(., details = TRUE)')
+#  x <- call(name = '.local_obj', fun = substitute(fun)) |> 
+#    eval()
+#  if (!length(x)) return(invisible())
   
-  from <- environment(fun = fun)
-  lapply(x, FUN = function(i) { # (i = x[[1L]])
-    assign(x = i, value = get(x = i, envir = from), envir = envir)
-  })
+  #from <- environment(fun = fun)
+  #lapply(x, FUN = function(i) { # (i = x[[1L]])
+  #  assign(x = i, value = get(x = i, envir = from), envir = envir)
+  #})
   
-  return(invisible())
+#  return(invisible())
   
-}
+#}
 
 
 

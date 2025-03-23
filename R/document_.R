@@ -21,7 +21,7 @@ document_ <- function(pkg = '.') {
   name <- basename(pkg)
   path <- dirname(pkg)
   
-  # system(paste('open', pkg)) # for my debug
+  # paste('open', pkg) |> system() # for my debug
   suppressMessages(document(pkg = pkg, roclets = c('rd', 'collate', 'namespace'), quiet = FALSE))
   # will add 'package:*name*' in base::search(), because of `load_code` parameter of ?roxygen2::roxygenize
   detach(name = paste0('package:', name), unload = TRUE, character.only = TRUE) # otherwise multiple S4 definitions
@@ -64,12 +64,13 @@ document_ <- function(pkg = '.') {
     #if (any(grepl('microbenchmark', x = itxt)) && !any('library(microbenchmark)' == itxt)) stop('microbenchmark in ', sQuote(inm))
   })
   
-  print(spell_check(pkg = pkg, vignettes = FALSE)); cat('\n')
+  pkg |> spell_check(vignettes = FALSE) |> print()
+  cat('\n')
   
   capture.output(build_manual(pkg = pkg))
   version <- read.dcf(file = file.path(pkg, 'DESCRIPTION'), fields = 'Version')
   file.exists(pdf_manual <- file.path(path, paste0(name, '_', version, '.pdf')))
-  system(paste('open', pdf_manual)) # no need to close the open pdf
+  paste('open', pdf_manual) |> system() # no need to close the open pdf
 }
 
 
