@@ -64,7 +64,7 @@ working_package_dependencies <- function(
     setdiff(y = R_base_()) |> # `R_base_()` is not on CRAN
     setdiff(y = vanilla_search_()) # no need to look at dependencies of vanilla search path
   
-  id <- match(ret1, table = rownames(db), nomatch = NA_integer_)
+  id <- match(x = ret1, table = rownames(db), nomatch = NA_integer_)
   if (anyNA(id)) message('Package(s) ', paste(col_blue(ret1[is.na(id)]), collapse = ', '), ' not available on CRAN')
   # ?tools::package_dependencies does *not* work with packages from Github!!! 
   # read more about parameter `db` of ?tools::package_dependencies

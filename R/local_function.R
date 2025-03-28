@@ -6,7 +6,7 @@
 #' @param ... additional parameters, currently not in use
 #' 
 #' @returns 
-#' Function [local_function] does not have a returned value.
+#' Function [local_function()] does not have a returned value.
 #' 
 #' @note
 #' Need to **Suggests** for examples to run.

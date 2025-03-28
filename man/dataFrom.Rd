@@ -12,7 +12,7 @@ dataFrom(x = data(package = "datasets"), what)
 \item{what}{\link[base]{character} scalar or \link[base]{vector}, class(es), see \link[base]{inherits}}
 }
 \value{
-Function \link{dataFrom} returns a \link[base]{list} of R objects.
+Function \code{\link[=dataFrom]{dataFrom()}} returns a \link[base]{list} of R objects.
 }
 \description{
 Obtain all objects available via \link[utils]{data} from a package
@@ -20,8 +20,8 @@ Obtain all objects available via \link[utils]{data} from a package
 \examples{
 # data(package = c('datasets', 'MASS')) |> dataFrom(what = 'data.frame') # next step
 
-lapply(dataFrom(what = 'data.frame'), head)
-lapply(dataFrom(what = 'numeric'), head)
+dataFrom(what = 'data.frame') |> lapply(FUN = head)
+dataFrom(what = 'numeric') |> lapply(FUN = head)
 
 \dontrun{
 # similar goal

@@ -4,9 +4,9 @@
 \name{adv.tzh-package}
 \alias{adv.tzh}
 \alias{adv.tzh-package}
-\title{adv.tzh}
+\title{adv.tzh: Advanced Manipulation of R Packages}
 \description{
-..
+To perform advanced manipulation of R packages.
 }
 \author{
 \strong{Maintainer}: Tingting Zhan \email{tingtingzhan@gmail.com}

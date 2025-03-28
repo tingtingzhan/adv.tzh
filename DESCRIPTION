@@ -6,11 +6,11 @@ Date: 2025-03-17
 Description: To perform advanced manipulation of R packages.
 License: GPL-2
 Encoding: UTF-8
-Imports: cli, devtools, pkgload, tools, usethis, utils
-Suggests: stats, Matrix, MASS, nlme, survival, spatstat.data,
+Imports: cli, devtools, pkgload, tools, utils
+Suggests: stats, dplyr, Matrix, MASS, nlme, survival, spatstat.data,
        vcdExtra
 Authors@R: c(person(given = "Tingting", family = "Zhan", role =
-       c("aut", "cre"), email = c("tingtingzhan@gmail.com")))
+       c("aut", "cre"), email = "tingtingzhan@gmail.com"))
 Language: en-US
 Roxygen: list(markdown = TRUE)
 Depends: R (>= 4.4.0)

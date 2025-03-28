@@ -17,7 +17,7 @@ local_function(pkg, ...)
 \item{fun}{\link[base]{function}, must be given in the format of \verb{pkg::function}}
 }
 \value{
-Function \link{local_function} does not have a returned value.
+Function \code{\link[=local_function]{local_function()}} does not have a returned value.
 
 Helper function \code{\link[=.local_obj]{.local_obj()}} returns a \link[base]{character} \link[base]{vector}.
 }

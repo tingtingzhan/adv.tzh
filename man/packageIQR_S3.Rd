@@ -17,16 +17,16 @@ all available data sets in one or more packages}
 \item{...}{addtional parameters, currently not in use}
 }
 \value{
-Function \link{as.environment.packageIQR} returns an \link[base]{environment}.
+Function \code{\link[=as.environment.packageIQR]{as.environment.packageIQR()}} returns an \link[base]{environment}.
 }
 \description{
 S3 Method Dispatches for \code{'packageIQR'} Object
 }
 \details{
-Function \link{as.environment.packageIQR} re-runs function \link[utils]{data}
+Function \code{\link[=as.environment.packageIQR]{as.environment.packageIQR()}} re-runs function \link[utils]{data}
 in a \link[base]{new.env}.
 
-Function \link{split.packageIQR} is inspired by function \code{?utils:::print.packageIQR}.
+Function \code{\link[=split.packageIQR]{split.packageIQR()}} is inspired by function \code{?utils:::print.packageIQR}.
 }
 \note{
 For data name without parentheses, e.g. \code{CO2},

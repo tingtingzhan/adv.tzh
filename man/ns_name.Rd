@@ -10,13 +10,14 @@ ns_name(x)
 \item{x}{a \link[utils]{getAnywhere} object}
 }
 \value{
-Function \link{ns_name} returns a \link[base]{character} scalar or \link[base]{vector}.
+Function \code{\link[=ns_name]{ns_name()}} returns a \link[base]{character} scalar or \link[base]{vector}.
 }
 \description{
 Attach \link[base:getNamespace]{Namespace} and \code{:} to Function Name
 }
 \examples{
-ns_name(getAnywhere('rlnorm')) # exported
-ns_name(getAnywhere('format_perc')) # not exported
+'rlnorm' |> getAnywhere() |> ns_name() # exported
+'format_perc' |> getAnywhere() |> ns_name() # not exported
+library(dplyr); 'filter' |> getAnywhere() |> ns_name() # conflict
 }
 \keyword{internal}

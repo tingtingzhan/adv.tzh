@@ -13,7 +13,7 @@
 #' @param all.names,sorted,... additional parameters of \link[base]{ls}
 #' 
 #' @details
-#' Function [objectFrom] ..
+#' Function [objectFrom()] ..
 #' 
 #' @returns 
 #' 

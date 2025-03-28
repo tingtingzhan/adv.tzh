@@ -29,8 +29,8 @@
 #' x2[isS4]
 #' 
 #' # developer's playground
-#' class(utils::getS3method(f = 'head', class = 'data.frame')) # 'function'
-#' class(methods::getMethod(f = 'head', signature = 'Matrix')) # 'MethodDefinition'
+#' utils::getS3method(f = 'head', class = 'data.frame') |> class() # 'function'
+#' methods::getMethod(f = 'head', signature = 'Matrix') |> class() # 'MethodDefinition'
 #' @name sub_MethodsFunction
 #' @export
 `[.MethodsFunction` <- function(x, i) {

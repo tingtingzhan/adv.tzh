@@ -9,7 +9,7 @@
 #' 
 
 #' @returns 
-#' Function [dataFrom] returns a \link[base]{list} of R objects.
+#' Function [dataFrom()] returns a \link[base]{list} of R objects.
 #' 
 #' @references 
 #' \url{https://stackoverflow.com/questions/27709936/get-a-list-of-the-data-sets-in-a-particular-package}
@@ -17,8 +17,8 @@
 #' @examples
 #' # data(package = c('datasets', 'MASS')) |> dataFrom(what = 'data.frame') # next step
 #' 
-#' lapply(dataFrom(what = 'data.frame'), head)
-#' lapply(dataFrom(what = 'numeric'), head)
+#' dataFrom(what = 'data.frame') |> lapply(FUN = head)
+#' dataFrom(what = 'numeric') |> lapply(FUN = head)
 #' 
 #' \dontrun{
 #' # similar goal
@@ -75,11 +75,11 @@ dataFrom <- function(x = data(package = 'datasets'), what) {
 #' @param ... addtional parameters, currently not in use
 #' 
 #' @details
-#' Function [as.environment.packageIQR] re-runs function \link[utils]{data} 
+#' Function [as.environment.packageIQR()] re-runs function \link[utils]{data} 
 #' in a \link[base]{new.env}.
 #' 
 #' @returns
-#' Function [as.environment.packageIQR] returns an \link[base]{environment}.
+#' Function [as.environment.packageIQR()] returns an \link[base]{environment}.
 #' 
 #' @note
 #' For data name without parentheses, e.g. `CO2`, 
@@ -153,7 +153,7 @@ as.environment.packageIQR <- function(x) {
 #' 
 #' @details
 #' 
-#' Function [split.packageIQR] is inspired by function `?utils:::print.packageIQR`.
+#' Function [split.packageIQR()] is inspired by function `?utils:::print.packageIQR`.
 #' 
 #' @examples
 #' x = data(package = c('datasets', 'survival'))

@@ -1,37 +1,39 @@
 
-################################################
-################################################
-################################################
-##
-## change in adv.tzh/R
-##
-################################################
-################################################
-################################################
-
 
 #' @title Attach \link[base:getNamespace]{Namespace} and `:` to Function Name
 #' 
 #' @param x a \link[utils]{getAnywhere} object
 #' 
 #' @returns
-#' Function [ns_name] returns a \link[base]{character} scalar or \link[base]{vector}.
+#' Function [ns_name()] returns a \link[base]{character} scalar or \link[base]{vector}.
 #' 
 #' @examples
-#' ns_name(getAnywhere('rlnorm')) # exported
-#' ns_name(getAnywhere('format_perc')) # not exported
+#' 'rlnorm' |> getAnywhere() |> ns_name() # exported
+#' 'format_perc' |> getAnywhere() |> ns_name() # not exported
+#' library(dplyr); 'filter' |> getAnywhere() |> ns_name() # conflict
 #' @keywords internal
 #' @export
 ns_name <- function(x) {
-  y <- grep(pattern = '^namespace\\:', x = x$where, value = TRUE)
-  #if (length(y) != 1L) stop('now allows')
-  pkg <- gsub(pattern = '^namespace\\:', replacement = '', y)
-  expts <- lapply(pkg, FUN = function(nm) { # (nm = pkg[[1L]])
-    getNamespaceExports(ns = getNamespace(name = nm))
-  })
-  colon <- ifelse(test = vapply(expts, FUN = `%in%`, x = x$name, FUN.VALUE = NA), yes = '::', no = ':::')
+  if (!inherits(x, what = 'getAnywhere')) stop('input must be getAnywhere-class')
+  pkg <- (x$where) |> 
+    grep(pattern = '^namespace\\:', value = TRUE) |>
+    gsub(pattern = '^namespace\\:', replacement = '')
+  colon <- pkg |> 
+    lapply(FUN = function(nm) { # (nm = pkg[[1L]])
+      nm |> getNamespace() |> getNamespaceExports()
+    }) |> 
+    vapply(FUN = `%in%`, x = x$name, FUN.VALUE = NA) |>
+    ifelse(yes = '::', no = ':::')
   paste0(pkg, colon, x$name)
 }
+
+if (FALSE) {
+  # `x = 'format_perc'` errs, because stats:::format_perc is not exported
+  x |> get() |> environment() |> getNamespaceName()
+}
+
+
+
 
 
 
