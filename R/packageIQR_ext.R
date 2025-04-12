@@ -132,7 +132,7 @@ as.environment.packageIQR <- function(x) {
   if (!length(xs)) return(invisible())
 
   # same data name could appear in more than one package(s)
-  ev_ <- mapply(FUN = function(x, package) {
+  ev_ <- mapply(FUN = \(x, package) {
     ev <- new.env()
     nm <- gsub(pattern = '^.* \\(|\\)$', replacement = '', x = x$results[,'Item']) |> 
       unique.default() |> 
@@ -173,8 +173,8 @@ split.packageIQR <- function(x, ...) {
   ids <- split.default(seq_len(nrow(db)), f = db[,'Package'])
   dbs <- lapply(ids, function(id) db[id, , drop = FALSE])
   
-  ret <- lapply(ids, FUN = function(i) x)
-  mapply(FUN = function(x, db) {
+  ret <- lapply(ids, FUN = \(i) x)
+  mapply(FUN = \(x, db) {
     x$results <- db
     return(x)
   }, x = ret, db = dbs, SIMPLIFY = FALSE)

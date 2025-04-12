@@ -53,7 +53,7 @@ working_package_dependencies <- function(
   if (!length(tmp)) return(invisible())
   
   ret <- tmp |>
-    lapply(FUN = function(j) parse_deps(j)$name) |>
+    lapply(FUN = \(j) parse_deps(j)$name) |>
     unlist(use.names = FALSE)
   # no matter packages in Depends and Imports are from CRAN or Github
   if (!recursive) return(ret)

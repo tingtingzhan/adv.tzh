@@ -19,7 +19,7 @@ ns_name <- function(x) {
     grep(pattern = '^namespace\\:', value = TRUE) |>
     gsub(pattern = '^namespace\\:', replacement = '')
   colon <- pkg |> 
-    lapply(FUN = function(nm) { # (nm = pkg[[1L]])
+    lapply(FUN = \(nm) { # (nm = pkg[[1L]])
       nm |> getNamespace() |> getNamespaceExports()
     }) |> 
     vapply(FUN = `%in%`, x = x$name, FUN.VALUE = NA) |>

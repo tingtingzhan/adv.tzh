@@ -31,7 +31,7 @@ local_function <- function(pkg, ...) {
   fn <- x[vapply(mget(x, envir = ns), FUN = is.function, FUN.VALUE = NA)]
   
   ret <- fn |> 
-    lapply(FUN = function(i) { # (i = fn[[1L]])
+    lapply(FUN = \(i) { # (i = fn[[1L]])
       call(name = '.local_obj', call(name = ':::', as.symbol(pkg), as.symbol(i))) |> 
         eval()
     })
