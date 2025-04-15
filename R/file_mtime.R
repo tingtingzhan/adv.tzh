@@ -36,7 +36,7 @@ file_mtime <- function(
   
   file |>
     file.info(extra_cols = FALSE) |> # see ?base::file.mtime and ?base::file.info
-    subset.data.frame(subset = !isdir, select = c('mtime')) |>
+    subset.data.frame(select = c('mtime')) |>
     sort_by.data.frame(y = ~ list(- as.numeric(mtime)))
   
 }
