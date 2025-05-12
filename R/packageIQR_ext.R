@@ -109,12 +109,9 @@ dataFrom <- function(x = data(package = 'datasets'), what) {
 #' stopifnot(identical(ls1, ls2))
 #' 
 #' if (FALSE) {
-#' ls1 = data(package = 'spatstat.data') |> as.environment() |> as.list(sort = TRUE)
-#' library(spatstat.data); ls2 = as.environment('package:spatstat.data') |> as.list(sort = TRUE)
-#' length(ls1)
-#' length(ls2)
-#' setdiff(names(ls2), names(ls1))
-#' class(ls2$copyExampleFiles) # function
+#' ls1 = data(package = 'datasets') |> as.environment() |> as.list(sort = TRUE)
+#' library(datasets); ls2 = as.environment('package:datasets') |> as.list(sort = TRUE)
+#' identical(ls1, ls2)
 #' }
 #' 
 #' \dontrun{

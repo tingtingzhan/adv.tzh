@@ -28,15 +28,15 @@ I am still playing with \link[utils]{getS3method} and \link[methods]{getMethod}
 Not sure what is \link[methods]{getClass}
 }
 \examples{
-library(Matrix)
-(x1 = .S3methods(head))
+library(stats4)
+(x1 = utils::.S3methods(coef))
 x1[1:3]
 
-(x2 = methods(head))
+(x2 = utils::methods(coef))
 x2[!isS4]
 x2[isS4]
 
 # developer's playground
-utils::getS3method(f = 'head', class = 'data.frame') |> class() # 'function'
-methods::getMethod(f = 'head', signature = 'Matrix') |> class() # 'MethodDefinition'
+utils::getS3method(f = 'coef', class = 'default') |> class() # 'function'
+methods::getMethod(f = 'coef', signature = 'mle') |> class() # 'MethodDefinition'
 }

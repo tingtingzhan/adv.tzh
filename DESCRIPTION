@@ -12,6 +12,5 @@ Language: en-US
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Depends: R (>= 4.5)
-Imports: cli, devtools, pkgload, tools, utils
-Suggests: stats, dplyr, Matrix, MASS, nlme, survival, spatstat.data,
-       vcdExtra
+Imports: cli, devtools, pkgload
+Suggests: dplyr, MASS, nlme, survival, vcdExtra
