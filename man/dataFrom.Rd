@@ -25,7 +25,7 @@ dataFrom(what = 'numeric') |> lapply(FUN = head)
 
 \dontrun{
 # similar goal
-vcdExtra::datasets(package = 'spatstat.data')
+vcdExtra::datasets(package = 'datasets')
 }
 }
 \references{
