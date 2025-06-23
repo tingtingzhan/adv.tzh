@@ -36,7 +36,7 @@ local_function('base')
 local_function('stats')
 local_function('utils')
 local_function('tools')
-local_function('nlme')
+local_function('MASS')
 # Helper function
 .local_obj(fun = base::sum) # primitive
 .local_obj(fun = base::sub) # not defined in local environment

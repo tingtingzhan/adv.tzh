@@ -16,7 +16,7 @@
 #' local_function('stats')
 #' local_function('utils')
 #' local_function('tools')
-#' local_function('nlme')
+#' local_function('MASS')
 #' @keywords internal
 #' @name local_function
 #' @importFrom cli cli_text style_bold col_green col_yellow col_blue col_magenta col_cyan

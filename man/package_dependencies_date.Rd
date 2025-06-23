@@ -17,5 +17,7 @@ working_package_dependencies_date(...)
 }
 \examples{
 \dontrun{# needs to set CRAN mirror when ?devtools::check
-package_dependencies_date(c('MASS', 'survival', 'nlme'), recursive = TRUE)}
+package_dependencies_date(c('MASS', 'survival'), recursive = TRUE)}
+
 }
+\keyword{internal}

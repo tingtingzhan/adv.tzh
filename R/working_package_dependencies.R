@@ -29,6 +29,7 @@
 #' working_package_dependencies('../DanielBiostatistics10th', recursive = TRUE, vanilla.rm = FALSE)
 #' working_package_dependencies_date('../DanielBiostatistics10th')
 #' }
+#' @keywords internal
 #' @importFrom devtools as.package
 #' @importFrom pkgload parse_deps
 #' @importFrom tools package_dependencies
@@ -159,7 +160,9 @@ sort_packageDate_ <- function(
 #' 
 #' @examples
 #' \dontrun{# needs to set CRAN mirror when ?devtools::check
-#' package_dependencies_date(c('MASS', 'survival', 'nlme'), recursive = TRUE)}
+#' package_dependencies_date(c('MASS', 'survival'), recursive = TRUE)}
+#' 
+#' @keywords internal
 #' @importFrom tools package_dependencies
 #' @name package_dependencies_date
 #' @export
