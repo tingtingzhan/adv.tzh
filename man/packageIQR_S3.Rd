@@ -72,3 +72,4 @@ x2 = data(package = c('survival'))
 y = split(x)
 stopifnot(identical(y$datasets, x1), identical(y$survival, x2))
 }
+\keyword{internal}

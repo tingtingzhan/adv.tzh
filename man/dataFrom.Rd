@@ -18,10 +18,9 @@ Function \code{\link[=dataFrom]{dataFrom()}} returns a \link[base]{list} of R ob
 Obtain all objects available via \link[utils]{data} from a package
 }
 \examples{
-# data(package = c('datasets', 'MASS')) |> dataFrom(what = 'data.frame') # next step
-
 dataFrom(what = 'data.frame') |> lapply(FUN = head)
 dataFrom(what = 'numeric') |> lapply(FUN = head)
+data(package = c('datasets', 'MASS')) |> dataFrom(what = 'data.frame') |> lapply(FUN = head)
 
 \dontrun{
 # similar goal

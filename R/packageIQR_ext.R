@@ -15,10 +15,9 @@
 #' \url{https://stackoverflow.com/questions/27709936/get-a-list-of-the-data-sets-in-a-particular-package}
 #' 
 #' @examples
-#' # data(package = c('datasets', 'MASS')) |> dataFrom(what = 'data.frame') # next step
-#' 
 #' dataFrom(what = 'data.frame') |> lapply(FUN = head)
 #' dataFrom(what = 'numeric') |> lapply(FUN = head)
+#' data(package = c('datasets', 'MASS')) |> dataFrom(what = 'data.frame') |> lapply(FUN = head)
 #' 
 #' \dontrun{
 #' # similar goal
@@ -38,11 +37,29 @@ dataFrom <- function(x = data(package = 'datasets'), what) {
     return(invisible())
   }
   
-  ret <- if (is.list(ev)) {
-    tmp <- lapply(ev, FUN = as.list.environment, sorted = TRUE)
-    nms <- lapply(tmp, FUN = names)
-    stop('have not figured out how to deal with duplicated names yet')
-  } else as.list.environment(ev, sorted = TRUE)
+  #if (is.list(ev)) {
+  #  tmp <- lapply(ev, FUN = as.list.environment, sorted = TRUE)
+  #  nms <- lapply(tmp, FUN = names)
+  #  stop('have not figured out how to deal with duplicated names yet')
+  #} else {
+  #  ret <- as.list.environment(ev, sorted = TRUE)
+  #  #names(ret) <- paset0()
+  #}
+  
+  foo <- \(envir, pkg) {
+    ret <- as.list.environment(envir, sorted = TRUE)
+    names(ret) <- paste0(pkg, '::', names(ret))
+    return(ret)
+  }
+  
+  ret <- if (is.environment(ev)) {
+    foo(envir = ev, pkg = x$results[1L, 'Package'])
+  } else if (is.list(ev)) {
+    mapply(FUN = foo, envir = ev, pkg = names(ev), MoreArgs = NULL, SIMPLIFY = FALSE) |>
+      unname() |>
+      unlist(recursive = FALSE)
+  }
+  
   
   if (missing(what)) return(ret)
   
@@ -119,6 +136,7 @@ dataFrom <- function(x = data(package = 'datasets'), what) {
 #' ev = data(package = pkg) |> as.environment() # not that slow
 #' length(ev)
 #' }
+#' @keywords internal
 #' @name packageIQR_S3
 #' @importFrom utils data
 #' @export as.environment.packageIQR
@@ -158,24 +176,30 @@ as.environment.packageIQR <- function(x) {
 #' x2 = data(package = c('survival'))
 #' y = split(x)
 #' stopifnot(identical(y$datasets, x1), identical(y$survival, x2))
+#' @keywords internal
 #' @export split.packageIQR
 #' @export
 split.packageIQR <- function(x, ...) {
   
-  f <- 'Package' # hard-coded for now
+  # x$results # 'matrix'
+  if (!length(x$results)) return(invisible()) # 'no data sets found'
   
-  db <- x$results
-  if (!length(db)) return(invisible()) # 'no data sets found'
+  dbs <- x$results |>
+    nrow() |>
+    seq_len() |>
+    split.default(f = x$results[,'Package']) |>
+    lapply(FUN = \(i) x$results[i, , drop = FALSE])
   
-  ids <- split.default(seq_len(nrow(db)), f = db[,'Package'])
-  dbs <- lapply(ids, function(id) db[id, , drop = FALSE])
+  ret <- dbs |>
+    length() |>
+    replicate(expr = x, simplify = FALSE)
+  names(ret) <- names(dbs)
   
-  ret <- lapply(ids, FUN = \(i) x)
   mapply(FUN = \(x, db) {
     x$results <- db
     return(x)
   }, x = ret, db = dbs, SIMPLIFY = FALSE)
-  
+
 }
 
 

@@ -36,12 +36,11 @@ local_function('base')
 local_function('stats')
 local_function('utils')
 local_function('tools')
-local_function('MASS')
 local_function('nlme')
-local_function('survival')
 # Helper function
 .local_obj(fun = base::sum) # primitive
 .local_obj(fun = base::sub) # not defined in local environment
 .local_obj(fun = stats:::update.packageStatus) # actually ?utils:::update.packageStatus
 .local_obj(fun = base::.doSortWrap)
 }
+\keyword{internal}

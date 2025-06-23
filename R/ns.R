@@ -16,7 +16,7 @@
 ns_name <- function(x) {
   if (!inherits(x, what = 'getAnywhere')) stop('input must be getAnywhere-class')
   pkg <- (x$where) |> 
-    grep(pattern = '^namespace\\:', value = TRUE) |>
+    grepv(pattern = '^namespace\\:') |>
     gsub(pattern = '^namespace\\:', replacement = '')
   colon <- pkg |> 
     lapply(FUN = \(nm) { # (nm = pkg[[1L]])
