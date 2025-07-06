@@ -66,10 +66,10 @@ pkg = setdiff(rownames(installed.packages()), c('rjags', 'VennDiagram'))
 ev = data(package = pkg) |> as.environment() # not that slow
 length(ev)
 }
-x = data(package = c('datasets', 'survival'))
+x = data(package = c('datasets', 'MASS'))
 x1 = data(package = c('datasets'))
-x2 = data(package = c('survival'))
+x2 = data(package = c('MASS'))
 y = split(x)
-stopifnot(identical(y$datasets, x1), identical(y$survival, x2))
+stopifnot(identical(y$datasets, x1), identical(y$MASS, x2))
 }
 \keyword{internal}

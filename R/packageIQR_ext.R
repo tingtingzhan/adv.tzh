@@ -37,15 +37,6 @@ dataFrom <- function(x = data(package = 'datasets'), what) {
     return(invisible())
   }
   
-  #if (is.list(ev)) {
-  #  tmp <- lapply(ev, FUN = as.list.environment, sorted = TRUE)
-  #  nms <- lapply(tmp, FUN = names)
-  #  stop('have not figured out how to deal with duplicated names yet')
-  #} else {
-  #  ret <- as.list.environment(ev, sorted = TRUE)
-  #  #names(ret) <- paset0()
-  #}
-  
   foo <- \(envir, pkg) {
     ret <- as.list.environment(envir, sorted = TRUE)
     names(ret) <- paste0(pkg, '::', names(ret))
@@ -171,11 +162,11 @@ as.environment.packageIQR <- function(x) {
 #' Function [split.packageIQR()] is inspired by function `?utils:::print.packageIQR`.
 #' 
 #' @examples
-#' x = data(package = c('datasets', 'survival'))
+#' x = data(package = c('datasets', 'MASS'))
 #' x1 = data(package = c('datasets'))
-#' x2 = data(package = c('survival'))
+#' x2 = data(package = c('MASS'))
 #' y = split(x)
-#' stopifnot(identical(y$datasets, x1), identical(y$survival, x2))
+#' stopifnot(identical(y$datasets, x1), identical(y$MASS, x2))
 #' @keywords internal
 #' @export split.packageIQR
 #' @export

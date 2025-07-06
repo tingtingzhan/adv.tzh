@@ -21,4 +21,17 @@ Function \link{sort_packageDate_} returns a \link[base]{Date} scalar or \link[ba
 \description{
 ..
 }
+\examples{
+# To pass CRAN check
+'https://cran.rstudio.com/' |>
+ utils::contrib.url() |> 
+ utils::available.packages() |> 
+ tools::package_dependencies(c('grid', 'pkgload'), db = _, recursive = TRUE) |>
+ lapply(FUN = sort_packageDate_)
+
+\dontrun{# In RStudio, simply use
+tools::package_dependencies(c('grid', 'pkgload'), recursive = TRUE) |>
+ lapply(FUN = sort_packageDate_)
+}
+}
 \keyword{internal}

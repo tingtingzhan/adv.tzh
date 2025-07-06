@@ -12,4 +12,4 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Depends: R (>= 4.5)
 Imports: cli, devtools, pkgload
-Suggests: dplyr, MASS, survival, vcdExtra
+Suggests: dplyr, MASS, vcdExtra

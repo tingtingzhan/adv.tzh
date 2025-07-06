@@ -14,7 +14,7 @@ working_package_dependencies(
 \arguments{
 \item{path}{\link[base]{character} scalar}
 
-\item{recursive}{\link[base]{logical} scalar, see \link[tools]{package_dependencies}}
+\item{recursive}{\link[base]{logical} scalar, see function \link[tools]{package_dependencies}}
 
 \item{vanilla.rm}{\link[base]{logical} scalar, whether to remove packages in \link[base]{search} path
 of a vanilla R session.  Default \code{TRUE}}
@@ -33,12 +33,7 @@ if (FALSE) {
 working_package_dependencies('.', recursive = FALSE)
 working_package_dependencies('.', recursive = TRUE)
 working_package_dependencies('.', recursive = TRUE, vanilla.rm = FALSE)
-working_package_dependencies_date('.')
-
-working_package_dependencies('../DanielBiostatistics10th', recursive = FALSE)
-working_package_dependencies('../DanielBiostatistics10th', recursive = TRUE)
-working_package_dependencies('../DanielBiostatistics10th', recursive = TRUE, vanilla.rm = FALSE)
-working_package_dependencies_date('../DanielBiostatistics10th')
+working_package_dependencies('.') |> sort_packageDate_()
 }
 }
 \keyword{internal}

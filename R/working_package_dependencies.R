@@ -7,7 +7,7 @@
 #' 
 #' @param path \link[base]{character} scalar
 #' 
-#' @param recursive \link[base]{logical} scalar, see \link[tools]{package_dependencies}
+#' @param recursive \link[base]{logical} scalar, see function \link[tools]{package_dependencies}
 #' 
 #' @param vanilla.rm \link[base]{logical} scalar, whether to remove packages in \link[base]{search} path
 #' of a vanilla R session.  Default `TRUE`
@@ -22,12 +22,7 @@
 #' working_package_dependencies('.', recursive = FALSE)
 #' working_package_dependencies('.', recursive = TRUE)
 #' working_package_dependencies('.', recursive = TRUE, vanilla.rm = FALSE)
-#' working_package_dependencies_date('.')
-#' 
-#' working_package_dependencies('../DanielBiostatistics10th', recursive = FALSE)
-#' working_package_dependencies('../DanielBiostatistics10th', recursive = TRUE)
-#' working_package_dependencies('../DanielBiostatistics10th', recursive = TRUE, vanilla.rm = FALSE)
-#' working_package_dependencies_date('../DanielBiostatistics10th')
+#' working_package_dependencies('.') |> sort_packageDate_()
 #' }
 #' @keywords internal
 #' @importFrom devtools as.package
@@ -84,7 +79,7 @@ working_package_dependencies <- function(
 
 
 vanilla_search_ <- function() c(
-  # packages loaded with vanilla R
+  # packages loaded into search() path in vanilla R
   'base', 
   'datasets', 
   'graphics', 'grDevices', 
@@ -132,6 +127,18 @@ R_base_ <- function() c(
 #' @returns
 #' Function [sort_packageDate_] returns a \link[base]{Date} scalar or \link[base]{vector}.
 #' 
+#' @examples
+#' # To pass CRAN check
+#' 'https://cran.rstudio.com/' |>
+#'  utils::contrib.url() |> 
+#'  utils::available.packages() |> 
+#'  tools::package_dependencies(c('grid', 'pkgload'), db = _, recursive = TRUE) |>
+#'  lapply(FUN = sort_packageDate_)
+#' 
+#' \dontrun{# In RStudio, simply use
+#' tools::package_dependencies(c('grid', 'pkgload'), recursive = TRUE) |>
+#'  lapply(FUN = sort_packageDate_)
+#' }
 #' @keywords internal
 #' @importFrom utils packageDate
 #' @export
@@ -151,30 +158,3 @@ sort_packageDate_ <- function(
 
 
 
-#' @title Last Update Dates of Packages Dependencies, in Reverse Order
-#' 
-#' @description
-#' ..
-#' 
-#' @param ... parameters of functions [working_package_dependencies] and \link[tools]{package_dependencies}
-#' 
-#' @examples
-#' \dontrun{# needs to set CRAN mirror when ?devtools::check
-#' package_dependencies_date(c('MASS', 'survival'), recursive = TRUE)}
-#' 
-#' @keywords internal
-#' @importFrom tools package_dependencies
-#' @name package_dependencies_date
-#' @export
-package_dependencies_date <- function(...) {
-  package_dependencies(...) |>
-    lapply(FUN = sort_packageDate_)
-}
-
-
-#' @rdname package_dependencies_date
-#' @export
-working_package_dependencies_date <- function(...) {
-  working_package_dependencies(...) |>
-    sort_packageDate_()
-}
