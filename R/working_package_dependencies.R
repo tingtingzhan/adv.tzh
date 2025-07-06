@@ -125,7 +125,7 @@ R_base_ <- function() c(
 #' @param ... additional parameters of \link[utils]{packageDate}
 #' 
 #' @returns
-#' Function [sort_packageDate_] returns a \link[base]{Date} scalar or \link[base]{vector}.
+#' Function [sort_packageDate_()] returns a \link[base]{Date} scalar or \link[base]{vector}.
 #' 
 #' @examples
 #' # To pass CRAN check

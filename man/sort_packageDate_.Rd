@@ -16,7 +16,7 @@ See \link[base]{order}}
 \item{...}{additional parameters of \link[utils]{packageDate}}
 }
 \value{
-Function \link{sort_packageDate_} returns a \link[base]{Date} scalar or \link[base]{vector}.
+Function \code{\link[=sort_packageDate_]{sort_packageDate_()}} returns a \link[base]{Date} scalar or \link[base]{vector}.
 }
 \description{
 ..

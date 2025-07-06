@@ -55,14 +55,9 @@ ls1 = data(package = 'datasets') |> as.environment() |> as.list(sort = TRUE)
 ls2 = as.environment('package:datasets') |> as.list(sort = TRUE)
 stopifnot(identical(ls1, ls2))
 
-if (FALSE) {
-ls1 = data(package = 'datasets') |> as.environment() |> as.list(sort = TRUE)
-library(datasets); ls2 = as.environment('package:datasets') |> as.list(sort = TRUE)
-identical(ls1, ls2)
-}
-
 \dontrun{
 pkg = setdiff(rownames(installed.packages()), c('rjags', 'VennDiagram'))
+# still trying to understand what's wrong with \CRANpkg{VennDiagram}
 ev = data(package = pkg) |> as.environment() # not that slow
 length(ev)
 }

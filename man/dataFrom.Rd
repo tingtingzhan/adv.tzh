@@ -22,11 +22,9 @@ dataFrom(what = 'data.frame') |> lapply(FUN = head)
 dataFrom(what = 'numeric') |> lapply(FUN = head)
 data(package = c('datasets', 'MASS')) |> dataFrom(what = 'data.frame') |> lapply(FUN = head)
 
-\dontrun{
-# similar goal
-vcdExtra::datasets(package = 'datasets')
-}
+vcdExtra::datasets(package = 'datasets') # similar goal
 }
 \references{
 \url{https://stackoverflow.com/questions/27709936/get-a-list-of-the-data-sets-in-a-particular-package}
 }
+\keyword{internal}
