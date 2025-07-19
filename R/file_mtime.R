@@ -34,11 +34,15 @@ file_mtime <- function(
 
   # ?tools::file_path_sans_ext can further remove file extension
   
-  file |>
-    file.info(extra_cols = FALSE) |> # see ?base::file.mtime and ?base::file.info
-    subset.data.frame(select = c('mtime')) |>
+  z <- file |>
+    file.info(extra_cols = FALSE) # see ?base::file.mtime and ?base::file.info
+  if (all(duplicated.default(dirname(file))[-1L])) {
+    .rowNamesDF(z) <- basename(file)
+  } # else do nothing
+
+  z[c('mtime')] |> 
     sort_by.data.frame(y = ~ list(- as.numeric(mtime)))
-  
+
 }
 
 
