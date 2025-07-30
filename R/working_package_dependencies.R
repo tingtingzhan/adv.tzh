@@ -28,7 +28,7 @@
 #' @importFrom devtools as.package
 #' @importFrom pkgload parse_deps
 #' @importFrom tools package_dependencies
-#' @importFrom utils available.packages
+#' @importFrom utils available.packages installed.packages
 #' @name working_package_dependencies
 #' @export
 working_package_dependencies <- function(
@@ -57,8 +57,7 @@ working_package_dependencies <- function(
   db <- available.packages() # see inside ?tools::package_dependencies
   
   ret1 <- ret |>
-    setdiff(y = R_base_()) |> # `R_base_()` is not on CRAN
-    setdiff(y = vanilla_search_()) # no need to look at dependencies of vanilla search path
+    setdiff(y = installed.packages(priority = 'base') |> rownames()) # these packages are not on CRAN
   
   id <- match(x = ret1, table = rownames(db), nomatch = NA_integer_)
   if (anyNA(id)) message('Package(s) ', paste(col_blue(ret1[is.na(id)]), collapse = ', '), ' not available on CRAN')
@@ -89,20 +88,8 @@ vanilla_search_ <- function() c(
 )
 
 # https://stackoverflow.com/questions/9700799/difference-between-r-base-and-r-recommended-packages
-R_base_ <- function() c(
-  'base', 
-  'compiler', 
-  'datasets',
-  'graphics', 'grDevices', 'grid',
-  'methods',
-  'parallel',
-  'splines',
-  'stats', 'stats4',
-  'tcltk',
-  'tools',
-  'translations', # not on Mac?
-  'utils'
-)
+
+
 
 
 
@@ -148,7 +135,7 @@ sort_packageDate_ <- function(
 ) {
   if (!length(pkg)) return(invisible())
   pkg <- pkg |>
-    setdiff(y = R_base_()) # will just be date of R 
+    setdiff(y = installed.packages(priority = 'base') |> rownames()) # will just be date of R 
   names(pkg) <- pkg
   pkg |>
     lapply(FUN = packageDate, ...) |>
