@@ -155,15 +155,3 @@ print.local_obj <- function(x, details = FALSE, ...) {
 } 
 
 
-
-
-
-
-
-if (FALSE) {
-  # run in vanilla R, not RStudio!
-  x = as.data.frame.matrix(installed.packages())
-  subset(x, !is.na(Priority) & Priority == 'base', select = 'Package')
-  subset(x, !is.na(Priority) & Priority == 'recommended', select = 'Package')
-}
-
