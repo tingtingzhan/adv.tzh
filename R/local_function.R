@@ -19,7 +19,7 @@
 #' local_function('MASS')
 #' @keywords internal
 #' @name local_function
-#' @importFrom cli cli_text style_bold col_green col_yellow col_blue col_magenta col_cyan
+#' @import cli
 #' @export
 local_function <- function(pkg, ...) {
   

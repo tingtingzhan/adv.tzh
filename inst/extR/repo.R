@@ -26,3 +26,13 @@ stopifnot(!length(intersect(rownames(cran), Bioc)))
 # update at least every month.
 
 
+
+# latest installed packages on hard drive
+installed.packages() |> # matrix
+  rownames() |>
+  setNames(nm = _) |>
+  lapply(FUN = packageDate) |>
+  do.call(what = c, args = _) |>
+  sort(decreasing = TRUE) |>
+  head(n = 20L)
+
