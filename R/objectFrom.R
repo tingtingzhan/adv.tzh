@@ -8,9 +8,9 @@
 #' 
 #' @param x see **Usage**
 #' 
-#' @param what ..
+#' @param what parameter of function \link[base]{inherits}
 #' 
-#' @param all.names,sorted,... additional parameters of \link[base]{ls}
+#' @param all.names,sorted,... additional parameters of function \link[base]{ls}
 #' 
 #' @details
 #' Function [objectFrom()] ..
@@ -34,13 +34,19 @@ objectFrom <- function(x, ...) UseMethod(generic = 'objectFrom')
 #' @rdname objectFrom
 #' @export objectFrom.environment
 #' @export
-objectFrom.environment <- function(x, what, all.names = TRUE, sorted = TRUE, ...) {
+objectFrom.environment <- function(
+    x, 
+    what, 
+    all.names = TRUE, 
+    sorted = TRUE, 
+    ...
+) {
   
   v <- ls(envir = x, all.names = all.names, sorted = sorted, ...)
   if (missing(what)) return(v)
   
   id <- v |>
-    mget(envir = x) |>
+    mget(x = _, envir = x) |>
     vapply(FUN = inherits, what = what, FUN.VALUE = NA)
   return(v[id])
   
@@ -53,7 +59,9 @@ objectFrom.environment <- function(x, what, all.names = TRUE, sorted = TRUE, ...
 objectFrom.character <- function(x, ...) {
   if (length(x) != 1L) stop('must be scalar')
   if (dir.exists(x)) x <- pkg_name(path = x)
-  x |> getNamespace() |> objectFrom.environment(...)
+  x |> 
+    getNamespace() |> # returns 'environment'
+    objectFrom.environment(...)
 }
 
 

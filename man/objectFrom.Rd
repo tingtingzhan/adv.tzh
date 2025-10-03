@@ -15,9 +15,9 @@ objectFrom(x, ...)
 \arguments{
 \item{x}{see \strong{Usage}}
 
-\item{what}{..}
+\item{what}{parameter of function \link[base]{inherits}}
 
-\item{all.names, sorted, ...}{additional parameters of \link[base]{ls}}
+\item{all.names, sorted, ...}{additional parameters of function \link[base]{ls}}
 }
 \value{
 Functions \code{\link[=objectFrom]{objectFrom()}} returns a \link[base]{character} \link[base]{vector} of function names.
