@@ -9,7 +9,7 @@ Authors@R: c(person(given = "Tingting", family = "Zhan", role =
        c("aut", "cre"), email = "tingtingzhan@gmail.com"))
 Language: en-US
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Depends: R (>= 4.5)
-Imports: cli, devtools, pkgload
+Imports: cli, devtools (== 2.4.6), pkgload (== 1.4.1)
 Suggests: dplyr, MASS, vcdExtra
