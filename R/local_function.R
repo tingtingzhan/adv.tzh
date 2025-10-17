@@ -14,9 +14,12 @@
 #' @examples
 #' local_function('base')
 #' local_function('stats')
+#' local_function('graphics')
 #' local_function('utils')
 #' local_function('tools')
 #' local_function('MASS')
+#' # local_function('spatstat.geom')
+#' # local_function('spatstat.explore')
 #' @keywords internal
 #' @name local_function
 #' @export
@@ -91,18 +94,16 @@ local_function <- function(pkg, ...) {
   # environment(fun = base::`-`) # NULL
   if (is.primitive(fun)) return(invisible())
   
-  env <- environment(fun = fun)
+  ev <- environment(fun = fun)
   
-  if (is.null(env)) stop('other than primitive function?')
+  if (is.null(ev)) stop('other than primitive function?')
   
-  if (isNamespace(env)) return(invisible()) # ?base::getNamespace of this packge, or some other packages
+  if (isNamespace(ev)) return(invisible()) # ?base::getNamespace of this packge, or some other packages
   
-  main_function <- (fun.name[[3L]]) |> as.character()
-  
-  ret <- ls(envir = env, all.names = TRUE) |>
-    setdiff(y = main_function)
-  attr(ret, which = 'main_function') <- main_function
-  attr(ret, which = 'envir') <- env
+  ret <- ls(envir = ev, all.names = TRUE)
+  attr(ret, which = 'main') <- (fun.name[[3L]]) |> 
+    as.character()
+  attr(ret, which = 'envir') <- ev
   class(ret) <- 'local_obj'
   return(ret)
 }
@@ -134,12 +135,26 @@ local_function <- function(pkg, ...) {
 #' @export
 print.local_obj <- function(x, details = FALSE, ...) {
   
+  .main <- x |> 
+    attr(which = 'main', exact = TRUE)
+  
+  x0 <- unclass(x)
+  main_id <- (x0 == .main)
+  if (any(main_id)) {
+    x0[main_id] <- x0[main_id] |> 
+      col_yellow()
+  }
+  x0[!main_id] <- x0[!main_id] |>
+    col_br_magenta()
+  
   sprintf(
     fmt = 'Local envir of %s contains %s', 
-    x |> attr(which = 'main_function', exact = TRUE) |> col_blue() |> style_bold(),
-    if (length(x)) {
-      x |> col_yellow() |> style_bold() |> paste0(collapse = ', ')
-    } else 'nothing else' |> col_green() |> style_bold()
+    .main |> col_blue() |> style_bold(),
+    if (!all(main_id)) {
+      x0 |> paste0(collapse = ', ')
+    } else {
+      'nothing else' |> col_green() |> style_bold()
+    }
   ) |>
     message()
   
