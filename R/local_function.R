@@ -138,20 +138,23 @@ print.local_obj <- function(x, details = FALSE, ...) {
   .main <- x |> 
     attr(which = 'main', exact = TRUE)
   
-  x0 <- unclass(x)
+  z0 <- x0 <- unclass(x)
   main_id <- (x0 == .main)
+  dots_id <- (x0 == '...')
   if (any(main_id)) {
-    x0[main_id] <- x0[main_id] |> 
+    z0[main_id] <- x0[main_id] |> 
       col_yellow()
   }
-  x0[!main_id] <- x0[!main_id] |>
+  z0[!main_id] <- x0[!main_id] |>
     col_br_magenta()
+  z0[dots_id] <- x0[dots_id] |>
+    col_br_red() |> style_bold() |> bg_br_yellow()
   
   sprintf(
     fmt = 'Local envir of %s contains %s', 
     .main |> col_blue() |> style_bold(),
     if (!all(main_id)) {
-      x0 |> paste0(collapse = ', ')
+      z0 |> paste0(collapse = ', ')
     } else {
       'nothing else' |> col_green() |> style_bold()
     }
