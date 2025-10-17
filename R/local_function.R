@@ -19,7 +19,6 @@
 #' local_function('MASS')
 #' @keywords internal
 #' @name local_function
-#' @import cli
 #' @export
 local_function <- function(pkg, ...) {
   
@@ -27,10 +26,11 @@ local_function <- function(pkg, ...) {
 
   # https://stackoverflow.com/questions/12114355/show-names-of-everything-in-a-package
   x <- ls(name = ns, all.names = TRUE, sorted = TRUE)
-  fn <- x[vapply(mget(x, envir = ns), FUN = is.function, FUN.VALUE = NA)]
-  
-  ret <- fn |> 
-    lapply(FUN = \(i) { # (i = fn[[1L]])
+  is_fn <- x |>
+    mget(envir = ns) |>
+    vapply(FUN = is.function, FUN.VALUE = NA)
+  ret <- x[is_fn] |> 
+    lapply(FUN = \(i) { # (i = x[is_fn][[1L]])
       call(name = '.local_obj', call(name = ':::', as.symbol(pkg), as.symbol(i))) |> 
         eval()
     })
