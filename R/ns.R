@@ -14,17 +14,22 @@
 #' @keywords internal
 #' @export
 ns_name <- function(x) {
+  
   if (!inherits(x, what = 'getAnywhere')) stop('input must be getAnywhere-class')
+  
   pkg <- (x$where) |> 
     grepv(pattern = '^namespace\\:') |>
     gsub(pattern = '^namespace\\:', replacement = '')
+  
   colon <- pkg |> 
     lapply(FUN = \(nm) { # (nm = pkg[[1L]])
       nm |> getNamespace() |> getNamespaceExports()
     }) |> 
     vapply(FUN = `%in%`, x = x$name, FUN.VALUE = NA) |>
     ifelse(yes = '::', no = ':::')
+  
   paste0(pkg, colon, x$name)
+  
 }
 
 if (FALSE) {
@@ -44,18 +49,29 @@ if (FALSE) {
 #' @param pkg \link[base]{character} scalar
 #' 
 #' @examples
-#' # ns_fun_fromImports(fun = c('col_green', 'build_manual'), pkg = 'adv.tzh')
+#' # ns_fun_fromImports(fun = c('col_green'), pkg = 'adv.tzh')
 #' # fine with devtools::check() on \pkg{adv.tzh}
 #' # but not okay if copied into other packages :)
 #' @keywords internal
 #' @export
 ns_fun_fromImports <- function(fun, pkg) {
-  impt0 <- getNamespaceImports(ns = getNamespace(name = pkg))
+  
+  impt0 <- pkg |>
+    getNamespace(name = _) |>
+    getNamespaceImports(ns = _)
   impt <- impt0[nzchar(names(impt0))]
-  x <- unlist(impt, use.names = FALSE)
-  id <- match(fun, table = x, nomatch = NA_integer_)
-  if (anyNA(id)) stop('stop, for now')
-  paste0(names(impt)[id], '::', x[id])
+  
+  id <- fun |>
+    vapply(FUN = \(i) {
+      id <- impt |>
+        vapply(FUN = `%in%`, x = i, FUN.VALUE = NA)
+      if (!any(id)) stop('`fun` contains um-imported function')
+      if (sum(id) > 1L) stop('should not happen')
+      return(which(id))
+    }, FUN.VALUE = NA_integer_)
+  
+  paste0(names(impt)[id], '::', fun)
+  
 }
 
 
@@ -63,13 +79,16 @@ ns_fun_fromImports <- function(fun, pkg) {
 
 if (FALSE) {
   
-  # [format_perc] is unexported from \pkg{stats}
+  # ?stats:::format_perc is un-exported.
   
   ns = getNamespace('stats')
-  stopifnot(identical(ns, asNamespace('stats')))
   
-  stopifnot(exists('format_perc', envir = ns))
-  stopifnot('format_perc' %in% ls(envir = ns))
+  stopifnot(
+    identical(ns, asNamespace('stats')),
+    exists('format_perc', envir = ns),
+    'format_perc' %in% ls(envir = ns),
+    !('format_perc' %in% getNamespaceExports(ns = ns))
+  )
   
   # ?`::` # read very carefully! - not helpful, though..
   # ?getFromNamespace
@@ -78,7 +97,6 @@ if (FALSE) {
   # fixInNamespace(x = 'format_perc', ns = ns) # um, disastrous
   
   tryCatch(getExportedValue(ns = ns, name = 'format_perc'), error = identity) # YES!!!!
-  stopifnot(!'format_perc' %in% getNamespaceExports(ns = ns)) # YESSSS!!!!
   
 }
 

@@ -74,6 +74,9 @@ Function \link[base]{identical} is called, as the exception handling.
 m1 = lm(breaks ~ -1 + wool + wool:tension, data = warpbreaks)
 m2 = lm(breaks ~ -1 + tension + tension:wool, data = warpbreaks)
 foo = function(m) list(pred = predict(m), resid = residuals(m))
-identical(foo(m1), foo(m2)) # FALSE
-stopifnot(relaxed_identical(foo(m1), foo(m2)))
+stopifnot(
+  !identical(foo(m1), foo(m2)),
+  relaxed_identical(foo(m1), foo(m2))
+)
 }
+\keyword{internal}

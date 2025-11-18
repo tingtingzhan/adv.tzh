@@ -36,6 +36,8 @@ file_mtime <- function(
   
   z <- file |>
     file.info(extra_cols = FALSE) # see ?base::file.mtime and ?base::file.info
+  # `z` is 'data.frame'
+  
   if (all(duplicated.default(dirname(file))[-1L])) {
     .rowNamesDF(z) <- basename(file)
   } # else do nothing

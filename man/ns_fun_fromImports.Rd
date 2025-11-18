@@ -15,7 +15,7 @@ ns_fun_fromImports(fun, pkg)
 Attach \link[base:getNamespace]{Namespace} and \code{:} to \emph{Imported} Function Name
 }
 \examples{
-# ns_fun_fromImports(fun = c('col_green', 'build_manual'), pkg = 'adv.tzh')
+# ns_fun_fromImports(fun = c('col_green'), pkg = 'adv.tzh')
 # fine with devtools::check() on \pkg{adv.tzh}
 # but not okay if copied into other packages :)
 }
