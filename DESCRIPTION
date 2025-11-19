@@ -11,5 +11,6 @@ Language: en-US
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Depends: R (>= 4.5)
-Imports: cli, devtools (== 2.4.6), pkgload (== 1.4.1)
+Imports: cli, methods, parallel, devtools (== 2.4.6), pkgload (== 1.4.1), sloop (== 1.0.1),
+    grid.tzh
 Suggests: dplyr, MASS, vcdExtra
