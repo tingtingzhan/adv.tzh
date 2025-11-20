@@ -32,6 +32,8 @@
 #' utils::getS3method(f = 'coef', class = 'default') |> class() # 'function'
 #' methods::getMethod(f = 'coef', signature = 'mle') |> class() # 'MethodDefinition'
 #' @name sub_MethodsFunction
+#' @keywords internal
+#' @export [.MethodsFunction
 #' @export
 `[.MethodsFunction` <- function(x, i) {
   info <- attr(x, which = 'info', exact = TRUE) # 'data.frame', as of 2024-11-01; packageDate('utils')

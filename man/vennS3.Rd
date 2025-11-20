@@ -2,19 +2,19 @@
 % Please edit documentation in R/vennS3.R
 \name{vennS3}
 \alias{vennS3}
-\title{\link{vennS3}}
+\title{Venn Graph of \code{S3} Generic & Methods}
 \usage{
 vennS3(pkg, mc.cores = getOption("cores"), ...)
 }
 \arguments{
-\item{pkg}{\link[base]{character} scalar}
+\item{pkg}{\link[base]{character} scalar, name of package}
 
 \item{mc.cores}{parameter of function \link[parallel]{mclapply}}
 
 \item{...}{additional parameters, currently of no use}
 }
 \description{
-\link{vennS3}
+Venn Graph of \code{S3} Generic & Methods
 }
 \examples{
 \dontrun{

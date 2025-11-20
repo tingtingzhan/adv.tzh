@@ -40,3 +40,4 @@ x2[isS4]
 utils::getS3method(f = 'coef', class = 'default') |> class() # 'function'
 methods::getMethod(f = 'coef', signature = 'mle') |> class() # 'MethodDefinition'
 }
+\keyword{internal}

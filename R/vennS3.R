@@ -1,9 +1,9 @@
 
 
 
-#' @title [vennS3]
+#' @title Venn Graph of `S3` Generic & Methods
 #' 
-#' @param pkg \link[base]{character} scalar
+#' @param pkg \link[base]{character} scalar, name of package
 #' 
 #' @param mc.cores parameter of function \link[parallel]{mclapply}
 #' 
