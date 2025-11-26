@@ -26,10 +26,15 @@ vennS3('tools')
 
 vennS3('MASS')
 vennS3('nlme')
+vennS3('mgcv')
 vennS3('survival')
 vennS3('caret')
 vennS3('ggplot2')
 vennS3('plotly')
+vennS3('R6')
+vennS3('S7')
+
+vennS3('groupedHyperframe')
 
 # vennS3('spatstat.geom') # base::local() definition causes error..
 }
