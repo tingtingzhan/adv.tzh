@@ -10,7 +10,7 @@
 \item{fun}{\link[base]{function}, must be given in the format of \verb{pkg::function}}
 }
 \value{
-Function \code{\link[=.local_obj]{.local_obj()}} returns a \link[base]{character} \link[base]{vector}.
+Function \code{\link[=.local_obj]{.local_obj()}} returns an object of class \code{'local_obj'}.
 }
 \description{
 Objects in a Local Environment

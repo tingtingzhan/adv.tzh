@@ -79,7 +79,7 @@ local_function <- function(pkg, ...) {
 #' in the \link[base]{local} environment of `fun`ction definition.
 #' 
 #' @returns
-#' Function [.local_obj()] returns a \link[base]{character} \link[base]{vector}.
+#' Function [.local_obj()] returns an object of class `'local_obj'`.
 #' 
 #' @examples
 #' .local_obj(fun = base::sum)
