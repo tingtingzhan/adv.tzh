@@ -18,10 +18,11 @@
 #' local_function('utils')
 #' local_function('tools')
 #' local_function('MASS')
-#' # local_function('spatstat.geom')
-#' # local_function('spatstat.explore')
+#' \dontrun{
+#' local_function('spatstat.geom')
+#' local_function('spatstat.explore')
+#' }
 #' @keywords internal
-#' @name local_function
 #' @export
 local_function <- function(pkg, ...) {
   
@@ -35,7 +36,8 @@ local_function <- function(pkg, ...) {
   ret <- x[is_fn] |> 
     lapply(FUN = \(i) { # (i = x[is_fn][[1L]])
       call(name = '.local_obj', call(name = ':::', as.symbol(pkg), as.symbol(i))) |> 
-        eval()
+        eval() |>
+        suppressMessages()
     })
 
   id <- (lengths(ret, use.names = FALSE) > 0L)
@@ -51,11 +53,12 @@ local_function <- function(pkg, ...) {
     return(invisible())
   } 
   
-  ret[id] |> lapply(FUN = print.local_obj)
+  ret[id] |> 
+    lapply(FUN = print.local_obj)
   message()
   sprintf(
     fmt = '%s functions in package %s are defined via {.fun base::local}, etc.', 
-    sprintf(fmt = '%d/%d; %.1f%%', sum(id), length(id), 1e2*mean(id)) |> col_green() |> style_bold(), 
+    sprintf(fmt = '%d/%d (%.1f%%)', sum(id), length(id), 1e2*mean(id)) |> col_green() |> style_bold(), 
     pkg |> col_cyan() |> style_bold()
   ) |>
     cli_text() |>
@@ -67,23 +70,23 @@ local_function <- function(pkg, ...) {
 
 
 
-#' @rdname local_function
+#' @title Objects in a Local Environment
 #' 
 #' @param fun \link[base]{function}, must be given in the format of `pkg::function`
 #' 
 #' @details
-#' Helper function [.local_obj()] provides the names of other objects 
-#' in the \link[base]{local} environment of function `fun` definition.
+#' Function [.local_obj()] provides the names of other objects 
+#' in the \link[base]{local} environment of `fun`ction definition.
 #' 
 #' @returns
-#' Helper function [.local_obj()] returns a \link[base]{character} \link[base]{vector}.
+#' Function [.local_obj()] returns a \link[base]{character} \link[base]{vector}.
 #' 
 #' @examples
-#' # Helper function
-#' .local_obj(fun = base::sum) # primitive
-#' .local_obj(fun = base::sub) # not defined in local environment
+#' .local_obj(fun = base::sum)
+#' .local_obj(fun = base::sub)
 #' .local_obj(fun = stats:::update.packageStatus) # actually ?utils:::update.packageStatus
 #' .local_obj(fun = base::.doSortWrap)
+#' @keywords internal
 #' @export
 .local_obj <- function(fun) {
   
@@ -92,19 +95,37 @@ local_function <- function(pkg, ...) {
   
   # primitive functions (e.g., ?base::`-`) does not have an environment
   # environment(fun = base::`-`) # NULL
-  if (is.primitive(fun)) return(invisible())
+  if (is.primitive(fun)) { 
+    fun.name |>
+      deparse1() |>
+      col_magenta() |> style_bold() |>
+      sprintf(fmt = '%s is a .Primitive function') |>
+      message()
+    return(invisible())
+  }
   
   ev <- environment(fun = fun)
   
   if (is.null(ev)) stop('other than primitive function?')
   
-  if (isNamespace(ev)) return(invisible()) # ?base::getNamespace of this packge, or some other packages
+  if (isNamespace(ev)) {
+    # ?base::getNamespace of this packge, or some other packages
+    fun.name |>
+      deparse1() |>
+      col_yellow() |> style_bold() |>
+      sprintf(fmt = '%s is not defined in a local environment') |>
+      message()
+    return(invisible()) 
+  }
   
-  ret <- ls(envir = ev, all.names = TRUE)
+  ret <- ls(envir = ev, all.names = TRUE) |>
+    setNames(nm = _) |>
+    lapply(FUN = get, envir = ev)
+  # `ret` is a named list of objects
   attr(ret, which = 'main') <- (fun.name[[3L]]) |> 
     as.character()
-  attr(ret, which = 'envir') <- ev
-  class(ret) <- 'local_obj'
+  class(ret) <- c('local_obj', class(ret)) |>
+    unique.default()
   return(ret)
 }
 
@@ -121,14 +142,13 @@ local_function <- function(pkg, ...) {
 #' @param ... additional parameters, currently of no use
 #' 
 #' @returns 
-#' Function [print.local_obj()] prints in an ANSI string, 
-#' see \link[cli]{ansi-styles}.
-#' 
-#' @returns 
-#' Function [print.local_obj()] does not have a returned value.
+#' Function [print.local_obj()] prints an ANSI string, 
+#' see \link[cli]{ansi-styles}, 
+#' but does not have a returned value.
 #' 
 #' @examples
-#' .local_obj(fun = base::.doSortWrap) |> print(details = TRUE)
+#' .local_obj(fun = base::.doSortWrap) |> 
+#'   print(details = TRUE)
 #' @keywords internal
 #' @importFrom stats setNames
 #' @export print.local_obj
@@ -138,7 +158,7 @@ print.local_obj <- function(x, details = FALSE, ...) {
   .main <- x |> 
     attr(which = 'main', exact = TRUE)
   
-  z0 <- x0 <- unclass(x)
+  z0 <- x0 <- names(x)
   main_id <- (x0 == .main)
   dots_id <- (x0 == '...')
   if (any(main_id)) {
@@ -163,9 +183,7 @@ print.local_obj <- function(x, details = FALSE, ...) {
   
   if (details) {
     x |>
-      setNames(nm = x) |>
-      lapply(FUN = get, envir = x |> attr(which = 'envir', exact = TRUE)) |>
-      print()
+      print.default()
   }
   
   return(invisible())

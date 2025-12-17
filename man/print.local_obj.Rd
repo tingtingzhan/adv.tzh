@@ -15,15 +15,15 @@ Default \code{FALSE}.}
 \item{...}{additional parameters, currently of no use}
 }
 \value{
-Function \code{\link[=print.local_obj]{print.local_obj()}} prints in an ANSI string,
-see \link[cli]{ansi-styles}.
-
-Function \code{\link[=print.local_obj]{print.local_obj()}} does not have a returned value.
+Function \code{\link[=print.local_obj]{print.local_obj()}} prints an ANSI string,
+see \link[cli]{ansi-styles},
+but does not have a returned value.
 }
 \description{
 print.local_obj
 }
 \examples{
-.local_obj(fun = base::.doSortWrap) |> print(details = TRUE)
+.local_obj(fun = base::.doSortWrap) |> 
+  print(details = TRUE)
 }
 \keyword{internal}

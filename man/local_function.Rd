@@ -2,31 +2,20 @@
 % Please edit documentation in R/local_function.R
 \name{local_function}
 \alias{local_function}
-\alias{.local_obj}
 \title{Functions in a Package, defined inside \link[base]{local}}
 \usage{
 local_function(pkg, ...)
-
-.local_obj(fun)
 }
 \arguments{
 \item{pkg}{\link[base]{character} scalar}
 
 \item{...}{additional parameters, currently not in use}
-
-\item{fun}{\link[base]{function}, must be given in the format of \verb{pkg::function}}
 }
 \value{
 Function \code{\link[=local_function]{local_function()}} does not have a returned value.
-
-Helper function \code{\link[=.local_obj]{.local_obj()}} returns a \link[base]{character} \link[base]{vector}.
 }
 \description{
 Functions in a Package, defined inside \link[base]{local}
-}
-\details{
-Helper function \code{\link[=.local_obj]{.local_obj()}} provides the names of other objects
-in the \link[base]{local} environment of function \code{fun} definition.
 }
 \note{
 Need to \strong{Suggests} for examples to run.
@@ -38,12 +27,9 @@ local_function('graphics')
 local_function('utils')
 local_function('tools')
 local_function('MASS')
-# local_function('spatstat.geom')
-# local_function('spatstat.explore')
-# Helper function
-.local_obj(fun = base::sum) # primitive
-.local_obj(fun = base::sub) # not defined in local environment
-.local_obj(fun = stats:::update.packageStatus) # actually ?utils:::update.packageStatus
-.local_obj(fun = base::.doSortWrap)
+\dontrun{
+local_function('spatstat.geom')
+local_function('spatstat.explore')
+}
 }
 \keyword{internal}
