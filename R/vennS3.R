@@ -87,7 +87,7 @@ vennS3 <- function(
       # "(There are no objects of these names in base R, but there are in the methods package.)"
       methods_obj[id_Group] |> 
         names() |>
-        match(table = names(base_obj)) # all NA !!
+        match(table = names(obj)) # all NA !!
     }
     
     z_groupMember <- methods_obj[id_Group] |> 
@@ -142,12 +142,17 @@ vennS3 <- function(
   
   z_generic <- z_generic & (!z_method)
   
-  list(
+  z <- list(
     Primitive = z_primitive,
     'S3 Generic' = z_generic,
     'S3 Method' = z_method,
-    'Member of Group Generic' = z_groupMember
+    'Group Generic' = z_groupMember
   ) |>
     venn(all. = (pkg != 'base'), all.nm = sprintf(fmt = 'pkg{%s}', pkg), print.mode = 'raw')
+  
+  attr(z, which = 'generic') <- names(fun)[z_generic]
+  attr(z, which = 'Primitive') <- names(fun)[z_primitive]
+  
+  return(z)
     
 }
