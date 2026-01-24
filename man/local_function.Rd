@@ -28,8 +28,9 @@ local_function('utils')
 local_function('tools')
 local_function('MASS')
 \dontrun{
-local_function('spatstat.geom')
 local_function('spatstat.explore')
+local_function('spatstat.geom')
+local_function('spatstat.random')
 }
 }
 \keyword{internal}

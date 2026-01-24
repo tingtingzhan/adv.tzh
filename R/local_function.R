@@ -19,8 +19,9 @@
 #' local_function('tools')
 #' local_function('MASS')
 #' \dontrun{
-#' local_function('spatstat.geom')
 #' local_function('spatstat.explore')
+#' local_function('spatstat.geom')
+#' local_function('spatstat.random')
 #' }
 #' @keywords internal
 #' @export
@@ -106,7 +107,7 @@ local_function <- function(pkg, ...) {
   
   ev <- environment(fun = fun)
   
-  if (is.null(ev)) stop('other than primitive function?')
+  if (is.null(ev)) stop('non-primitive function must have non-NULL environment')
   
   if (isNamespace(ev)) {
     # ?base::getNamespace of this packge, or some other packages
@@ -159,21 +160,33 @@ print.local_obj <- function(x, details = FALSE, ...) {
     attr(which = 'main', exact = TRUE)
   
   z0 <- x0 <- names(x)
-  main_id <- (x0 == .main)
-  dots_id <- (x0 == '...')
-  if (any(main_id)) {
-    z0[main_id] <- x0[main_id] |> 
-      col_yellow()
-  }
-  z0[!main_id] <- x0[!main_id] |>
-    col_br_magenta()
-  z0[dots_id] <- x0[dots_id] |>
+  id_main <- (x0 == .main)
+  id_dots <- (x0 == '...')
+
+  tp <- x |>
+    vapply(FUN = typeof, FUN.VALUE = NA_character_)
+  id_closure_nonmain <- (tp == 'closure') & !id_main # function
+  id_constant <- (tp != 'closure')
+  
+  z0[id_main] <- x0[id_main] |> 
+    sprintf(fmt = '%s()') |>
+    col_yellow()
+  z0[id_dots] <- x0[id_dots] |>
     col_br_red() |> style_bold() |> bg_br_yellow()
+  z0[id_closure_nonmain] <- x0[id_closure_nonmain] |>
+    sprintf(fmt = '%s()') |>
+    col_br_magenta() |> style_bold()
+  z0[id_constant] <- x0[id_constant] |>
+    make_ansi_style('grey70')()
   
   sprintf(
     fmt = 'Local envir of %s contains %s', 
-    .main |> col_blue() |> style_bold(),
-    if (!all(main_id)) {
+    .main |> 
+      #as.symbol() |>
+      #deparse1() |>
+      #sprintf(fmt = '%s()') |>
+      col_blue() |> style_bold(),
+    if (!all(id_main)) {
       z0 |> paste0(collapse = ', ')
     } else {
       'nothing else' |> col_green() |> style_bold()
