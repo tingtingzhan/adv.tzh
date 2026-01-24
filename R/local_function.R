@@ -88,6 +88,7 @@ local_function <- function(pkg, ...) {
 #' .local_obj(fun = stats:::update.packageStatus) # actually ?utils:::update.packageStatus
 #' .local_obj(fun = base::.doSortWrap)
 #' @keywords internal
+#' @importFrom stats setNames
 #' @export
 .local_obj <- function(fun) {
   
@@ -151,7 +152,6 @@ local_function <- function(pkg, ...) {
 #' .local_obj(fun = base::.doSortWrap) |> 
 #'   print(details = TRUE)
 #' @keywords internal
-#' @importFrom stats setNames
 #' @export print.local_obj
 #' @export
 print.local_obj <- function(x, details = FALSE, ...) {
