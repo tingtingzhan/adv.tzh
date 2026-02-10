@@ -24,6 +24,7 @@
 #' local_function('spatstat.random')
 #' }
 #' @keywords internal
+#' @importFrom utils packageVersion
 #' @export
 local_function <- function(pkg, ...) {
   
