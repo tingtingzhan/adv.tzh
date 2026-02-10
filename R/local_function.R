@@ -45,9 +45,10 @@ local_function <- function(pkg, ...) {
   
   if (!any(id)) {
     sprintf(
-      fmt = 'None of %d functions in package %s are defined via {.fun base::local}, etc.', 
+      fmt = 'None of %d functions in package %s %s are defined via {.fun base::local}, etc.', 
       length(id), 
-      pkg |> col_magenta() |> style_bold()
+      pkg |> col_magenta() |> style_bold(),
+      pkg |> packageVersion() |> as.character() |> sprintf(fmt = 'ver%s') |> col_br_blue() |> style_bold()
     ) |> 
       cli_text()
       message(appendLF = FALSE)
@@ -58,9 +59,10 @@ local_function <- function(pkg, ...) {
     lapply(FUN = print.local_obj)
   message()
   sprintf(
-    fmt = '%s functions in package %s are defined via {.fun base::local}, etc.', 
+    fmt = '%s functions in package %s %s are defined via {.fun base::local}, etc.', 
     sprintf(fmt = '%d/%d (%.1f%%)', sum(id), length(id), 1e2*mean(id)) |> col_green() |> style_bold(), 
-    pkg |> col_cyan() |> style_bold()
+    pkg |> col_cyan() |> style_bold(),
+    pkg |> packageVersion() |> as.character() |> sprintf(fmt = 'ver%s') |> col_br_blue() |> style_bold()
   ) |>
     cli_text() |>
     message(appendLF = FALSE)
