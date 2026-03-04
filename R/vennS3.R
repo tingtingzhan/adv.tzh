@@ -35,14 +35,14 @@
 #' 
 #' @keywords internal
 #' @importFrom methods isGroup getGroupMembers
-#' @importFrom parallel mclapply
+#' @importFrom parallel detectCores mclapply
 #' @importFrom utils head
 #' @importFrom sloop is_s3_generic is_s3_method
 #' @importFrom grid.tzh venn
 #' @export
 vennS3 <- function(
     pkg,
-    mc.cores = getOption('cores'),
+    mc.cores = detectCores(),
     ...
 ) {
   

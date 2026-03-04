@@ -4,7 +4,7 @@
 \alias{vennS3}
 \title{Venn Graph of \code{S3} Generic & Methods}
 \usage{
-vennS3(pkg, mc.cores = getOption("cores"), ...)
+vennS3(pkg, mc.cores = detectCores(), ...)
 }
 \arguments{
 \item{pkg}{\link[base]{character} scalar, name of package}
