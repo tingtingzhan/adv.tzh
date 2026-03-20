@@ -10,7 +10,7 @@ methods2kable(
   package,
   package_pattern,
   backtick = TRUE,
-  include_non_exported = FALSE,
+  include_non_exported = TRUE,
   ...
 )
 }

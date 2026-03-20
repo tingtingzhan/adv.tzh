@@ -25,7 +25,7 @@ methods2kable <- \(
   package, # \link[base]{character} scalar
   package_pattern, # \link[base]{character} scalar of \link[base]{regex}
   backtick = TRUE, # \link[base]{logical} scalar, whether to put backticks around function names. Default `TRUE` for Markdown/Quarto rendering.
-  include_non_exported = FALSE, # \link[base]{logical} scalar, whether to include non-exported S3 methods (`'registered S3method'`)
+  include_non_exported = TRUE, # \link[base]{logical} scalar, whether to include non-exported S3 methods (`'registered S3method'`)
   ... # additional parameters of the function \link[utils]{methods}
 ) {
   
