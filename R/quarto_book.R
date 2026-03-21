@@ -60,11 +60,10 @@ methods2kable <- \(
     subset.data.frame(subset = eval(cl)) |>
     within.data.frame(expr = {
       
-      if (length(from) > 1L & all(duplicated.default(from)[-1L])) {
-        from <- NULL
-      }
-      
-      if (all(startsWith(from, prefix = 'registered S3method'))) {
+      if (
+        (length(from) > 1L & all(duplicated.default(from)[-1L])) ||
+        all(startsWith(from, prefix = 'registered S3method'))
+      ) {
         from <- NULL
       }
       
