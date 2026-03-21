@@ -64,6 +64,10 @@ methods2kable <- \(
         from <- NULL
       }
       
+      if (all(startsWith(from, prefix = 'registered S3method'))) {
+        from <- NULL
+      }
+      
       if (length(generic) > 1L & all(duplicated.default(generic)[-1L])) {
         generic <- NULL
       } else {
@@ -107,6 +111,7 @@ methods2kable <- \(
     kable(caption = kcaption)
   
 }
+
 
 
 #' @title Generic Function with Namespace
@@ -170,6 +175,8 @@ methods2kable <- \(
   return(z)
   
 }
+
+
 
 
 
