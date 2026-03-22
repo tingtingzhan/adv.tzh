@@ -37,7 +37,7 @@ methods2kable <- \(
     }
   } else if (!missing(package_pattern)) {
     cl <- quote(grepl(pattern = package_pattern, x = from))
-  } else stop('unspecified `package`')
+  } else cl <- TRUE
   
   MFinfo <- \(...) {
     methods(...) |> 
@@ -86,28 +86,36 @@ methods2kable <- \(
     unique()
   oo <- if (all(s4)) '`S4`' else if (!any(s4)) '`S3`' else '`S3`/`S4`'
   
-  if (!missing(package)) {
+  if (!missing(generic.function)) {
     
-    kcaption <- if (!missing(generic.function)) {
-      if (length(generic.function) > 1L) {
+    caption <- if (length(generic.function) > 1L) {
+      
+      if (!missing(package) && length(package) == 1L) {
         sprintf(fmt = '`%s::%s.*`', package, generic.function) |>
           paste(collapse = ', ') |>
-          sprintf(fmt = '%s methods %s (v%s)', oo, . = _, packageVersion(package)
-          )
-      } else {
-        generic.function |>
-          .ns_generic(backtick = TRUE, ver = TRUE) |>
-          sprintf(fmt = '%s methods of %s', oo, . = _)
+          sprintf(fmt = '%s methods %s (v%s)', oo, . = _, packageVersion(package))
+      } else { # missing(package) || length(package) > 1
+        NULL # lazy way out :))
       }
-    } else if (!missing(class)) {
+      
+    } else { # length(generic.function) == 1L
+      generic.function |>
+        .ns_generic(backtick = TRUE, ver = TRUE) |>
+        sprintf(fmt = '%s methods of %s', oo, . = _)
+    }
+    
+  } else if (!missing(class)) {
+    
+    caption <- if (!missing(package)) {
       sprintf(fmt = '%s methods `%s::*.%s` (v%s)', oo, package, class, packageVersion(package))
-    } else stop()
-  } else if (!missing(package_pattern)) {
-    kcaption <- NULL # lazy way out :))
-  } else stop('unspecified `package`')
-  
+    } else {
+      sprintf(fmt = '%s methods `*.%s` (%s)', oo, class, R.version.string)
+    }
+    
+  } else stop()
+    
   x |> 
-    kable(caption = kcaption)
+    kable(caption = caption)
   
 }
 
