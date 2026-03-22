@@ -108,6 +108,8 @@ methods2kable <- \(
     
     caption <- if (!missing(package)) {
       sprintf(fmt = '%s methods `%s::*.%s` (v%s)', oo, package, class, packageVersion(package))
+    } else if (!missing(package_pattern)) {
+      sprintf(fmt = '%s methods `*.%s`', oo, class)
     } else {
       sprintf(fmt = '%s methods `*.%s` (%s)', oo, class, R.version.string)
     }
