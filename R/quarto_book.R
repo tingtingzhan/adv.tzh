@@ -1,5 +1,26 @@
 
 
+#' @title Package Info
+#' 
+#' @param package \link[base]{character} scalar
+#' 
+#' @note
+#' Potential name clash \link[sessioninfo]{package_info}.
+#' 
+#' @importFrom utils packageVersion packageDescription
+#' @export
+pkgInfo. <- function(package) {
+  sprintf(
+    fmt = 'v%s, %s',
+    package |> 
+      packageVersion(),
+    package |> 
+      packageDescription() |>
+      getElement(name = 'License')
+  )
+}
+
+
 #' @title `S3` methods table in vignette
 #' 
 #' @param generic.function,class see function \link[utils]{methods}
