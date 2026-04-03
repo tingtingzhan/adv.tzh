@@ -13,4 +13,4 @@ RoxygenNote: 7.3.3
 Depends: R (>= 4.5)
 Imports: methods, parallel, cli (== 3.6.5), devtools (== 2.5.0), knitr (== 1.51), pkgload (== 1.5.1), sloop (== 1.0.1),
     grid.tzh
-Suggests: dplyr (== 1.2.0), MASS (== 7.3.65), sessioninfo (== 1.2.3)
+Suggests: dplyr (== 1.2.1), MASS (== 7.3.65), sessioninfo (== 1.2.3)
