@@ -21,6 +21,8 @@ pkgInfo. <- function(package) {
 }
 
 
+
+
 #' @title `S3` methods table in vignette
 #' 
 #' @param generic.function,class see function \link[utils]{methods}
@@ -38,16 +40,16 @@ pkgInfo. <- function(package) {
 #' The function [methods2kable()] returns a \link[base]{data.frame}.
 #' 
 #' @keywords internal
+#' @name fancymethods
 #' @importFrom utils methods packageVersion
-#' @importFrom knitr kable
 #' @export
-methods2kable <- \(
-  generic.function, class, # see function \link[utils]{methods}
-  package, # \link[base]{character} scalar
-  package_pattern, # \link[base]{character} scalar of \link[base]{regex}
-  backtick = TRUE, # \link[base]{logical} scalar, whether to put backticks around function names. Default `TRUE` for Markdown/Quarto rendering.
-  include_non_exported = TRUE, # \link[base]{logical} scalar, whether to include non-exported S3 methods (`'registered S3method'`)
-  ... # additional parameters of the function \link[utils]{methods}
+fancymethods <- function(
+    generic.function, class, # see function \link[utils]{methods}
+    package, # \link[base]{character} scalar
+    package_pattern, # \link[base]{character} scalar of \link[base]{regex}
+    backtick = TRUE, # \link[base]{logical} scalar, whether to put backticks around function names. Default `TRUE` for Markdown/Quarto rendering.
+    include_non_exported = TRUE, # \link[base]{logical} scalar, whether to include non-exported S3 methods (`'registered S3method'`)
+    ... # additional parameters of the function \link[utils]{methods}
 ) {
   
   if (!missing(package)) {
@@ -136,12 +138,46 @@ methods2kable <- \(
     }
     
   } else stop()
-    
-  x |> 
-    kable(caption = caption)
+  
+  attr(x, which = 'caption') <- caption
+  return(x)
   
 }
 
+
+
+#' @rdname fancymethods
+#' @importFrom knitr kable
+#' @export
+methods2kable <- function(...) {
+  x <- fancymethods(...)
+  x |> 
+    kable(caption = attr(x, which = 'caption', exact = TRUE))
+}
+
+
+
+#' @rdname fancymethods
+#' @importFrom reactable reactable
+#' @export
+methods2reactable <- function(..., backtick = FALSE) {
+  
+  x <- fancymethods(..., backtick = backtick)
+  # it seems that
+  # reactable::reactable cannot change font based on md ??
+  # cannot handle backtick
+  # ???
+  
+  # convert rownames as col-1L, in order to sort according to it
+  z <- data.frame(
+    'method' = rownames(x),
+    x
+  )
+  .rowNamesDF(z) <- NULL
+  
+  z |>
+    reactable()
+}
 
 
 #' @title Generic Function with Namespace
