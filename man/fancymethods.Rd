@@ -18,7 +18,7 @@ fancymethods(
 
 methods2kable(...)
 
-methods2reactable(..., backtick = FALSE)
+methods2reactable(..., subset, select, backtick = FALSE)
 }
 \arguments{
 \item{generic.function, class}{see function \link[utils]{methods}}

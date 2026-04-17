@@ -160,7 +160,12 @@ methods2kable <- function(...) {
 #' @rdname fancymethods
 #' @importFrom reactable reactable
 #' @export
-methods2reactable <- function(..., backtick = FALSE) {
+methods2reactable <- function(
+    ..., 
+    subset,
+    select,
+    backtick = FALSE
+) {
   
   x <- fancymethods(..., backtick = backtick)
   # it seems that
@@ -174,6 +179,17 @@ methods2reactable <- function(..., backtick = FALSE) {
     x
   )
   .rowNamesDF(z) <- NULL
+  
+  cl <- list(
+    quote(subset.data.frame), 
+    x = quote(z), 
+    subset = if (!missing(subset)) substitute(subset),
+    select = if (!missing(select)) substitute(select)
+  )
+  cl <- cl[lengths(cl) > 0L]
+  z <- cl |>
+    as.call() |>
+    eval()
   
   z |>
     reactable()
