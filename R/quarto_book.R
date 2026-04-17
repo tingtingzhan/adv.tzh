@@ -158,6 +158,7 @@ methods2kable <- function(...) {
 
 
 #' @rdname fancymethods
+#' @param subset,select see function \link[base]{subset.data.frame}
 #' @importFrom reactable reactable
 #' @export
 methods2reactable <- function(

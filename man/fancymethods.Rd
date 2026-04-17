@@ -31,6 +31,8 @@ methods2reactable(..., subset, select, backtick = FALSE)
 Default \code{TRUE} for Markdown/Quarto rendering.}
 
 \item{...}{additional parameters of the function \link[utils]{methods}}
+
+\item{subset, select}{see function \link[base]{subset.data.frame}}
 }
 \value{
 The function \code{\link[=methods2kable]{methods2kable()}} returns a \link[base]{data.frame}.
