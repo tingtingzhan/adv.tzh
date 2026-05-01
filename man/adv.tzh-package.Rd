@@ -11,5 +11,10 @@ To perform advanced manipulation of R packages.
 \author{
 \strong{Maintainer}: Tingting Zhan \email{tingtingzhan@gmail.com}
 
+Authors:
+\itemize{
+  \item Tingting Zhan \email{tingtingzhan@gmail.com}
+}
+
 }
 \keyword{internal}

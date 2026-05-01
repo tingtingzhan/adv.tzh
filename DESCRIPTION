@@ -8,9 +8,9 @@ Encoding: UTF-8
 Authors@R: c(person(given = "Tingting", family = "Zhan", role =
        c("aut", "cre"), email = "tingtingzhan@gmail.com"))
 Language: en-US
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Depends: R (>= 4.5)
 Imports: methods, parallel, cli (== 3.6.6), devtools (== 2.5.2), knitr (== 1.51), pkgload (== 1.5.2), reactable (== 0.4.5), sloop (== 1.0.1),
     grid.tzh
 Suggests: dplyr, MASS, sessioninfo
+Config/roxygen2/version: 8.0.0
+Config/roxygen2/markdown: TRUE
