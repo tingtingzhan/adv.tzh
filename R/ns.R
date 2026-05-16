@@ -87,7 +87,7 @@ if (FALSE) {
     identical(ns, asNamespace('stats')),
     exists('format_perc', envir = ns),
     'format_perc' %in% ls(envir = ns),
-    !('format_perc' %in% getNamespaceExports(ns = ns))
+    'format_perc' %notin% getNamespaceExports(ns = ns)
   )
   
   # ?`::` # read very carefully! - not helpful, though..

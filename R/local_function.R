@@ -96,7 +96,7 @@ local_function <- function(pkg, ...) {
 .local_obj <- function(fun) {
   
   fun.name <- substitute(fun)
-  if (!(as.character(fun.name[[1L]]) %in% c('::', ':::'))) stop('`fun` must be pkg::fun format')
+  if (as.character(fun.name[[1L]]) %notin% c('::', ':::')) stop('`fun` must be pkg::fun format')
   
   # primitive functions (e.g., ?base::`-`) does not have an environment
   # environment(fun = base::`-`) # NULL
